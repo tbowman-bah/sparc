@@ -1,433 +1,182 @@
-  ```ascii
+# SPARC Framework
 
-  ██▀███   ▄▄▄            ▄▄▄       ██▓▓█████▄ 
- ▓██ ▒ ██▒▒████▄         ▒████▄    ▓██▒▒██▀ ██▌
- ▓██ ░▄█ ▒▒██  ▀█▄       ▒██  ▀█▄  ▒██▒░██   █▌
- ▒██▀▀█▄  ░██▄▄▄▄██      ░██▄▄▄▄██ ░██░░▓█▄   ▌
- ░██▓ ▒██▒ ▓█   ▓██▒ ██▓  ▓█   ▓██▒░██░░▒████▓ 
- ░ ▒▓ ░▒▓░ ▒▒   ▓▒█░ ▒▓▒  ▒▒   ▓▒█░░▓   ▒▒▓  ▒ 
-   ░▒ ░ ▒░  ▒   ▒▒ ░ ░▒    ▒   ▒▒ ░ ▒ ░ ░ ▒  ▒ 
-   ░░   ░   ░   ▒    ░     ░   ▒    ▒ ░ ░ ░  ░ 
-    ░           ░  ░  ░        ░  ░ ░     ░    
-                      ░                 ░      
-```
+![License](https://img.shields.io/github/license/yourusername/sparc-framework)
+![GitHub issues](https://img.shields.io/github/issues/yourusername/sparc-framework)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/yourusername/sparc-framework)
 
-[![Python Versions](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
-[![Status](https://img.shields.io/badge/status-Beta-yellow)]()
+## Introduction
 
-# RA.Aid
+The **SPARC Framework** is a comprehensive methodology designed to guide the development of robust and scalable applications. SPARC stands for **Specification**, **Pseudocode**, **Architecture**, **Refinement**, and **Completion**. Each step ensures thorough planning, execution, and reflection throughout the project lifecycle.
 
-**AI software development agent powered by `aider` and advanced reasoning models like `o1`.**
+### Why SPARC?
 
-RA.Aid (ReAct Aid) was made by putting `aider` (https://aider.chat/) in a LangChain ReAct agent loop. This unique combination allows developers to leverage aider's code editing capabilities while benefiting from LangChain's agent-based task execution framework. The tool provides an intelligent assistant that can help with research, planning, and implementation of multi-step development tasks.
-
-RA.Aid is a practical tool for everyday software development and is used for developing real-world applications.
-
-Here's a demo of RA.Aid adding a feature to itself:
-
-<img src="assets/demo-ra-aid-task-1.gif" alt="RA.Aid Demo" autoplay loop style="width: 100%; max-width: 800px;">
-
-> 👋 **Pull requests are very welcome!** Have ideas for how to impove RA.Aid? Don't be shy - your help makes a real difference!
->
-> 💬 **Join our Discord community:** [Click here to join](https://discord.gg/f6wYbzHYxV)
-
-⚠️ **IMPORTANT: USE AT YOUR OWN RISK** ⚠️
-- This tool **can and will** automatically execute shell commands and make code changes
-- The --cowboy-mode flag can be enabled to skip shell command approval prompts
-- No warranty is provided, either express or implied
-- Always use in version-controlled repositories
-- Review proposed changes in your git diff before committing
-
-## Key Features
-
-- **Multi-Step Task Planning**: The agent breaks down complex tasks into discrete, manageable steps and executes them sequentially. This systematic approach ensures thorough implementation and reduces errors.
-
-- **Automated Command Execution**: The agent can run shell commands automatically to accomplish tasks. While this makes it powerful, it also means you should carefully review its actions.
-
-- **Ability to Leverage Expert Reasoning Models**: The agent can use advanced reasoning models such as OpenAI's o1 *just when needed*, e.g. to solve complex debugging problems or in planning for complex feature implementation.
-
-- **Three-Stage Architecture**:
-  1. **Research**: Analyzes codebases and gathers context
-  2. **Planning**: Breaks down tasks into specific, actionable steps
-  3. **Implementation**: Executes each planned step sequentially
-
-What sets RA.Aid apart is its ability to handle complex programming tasks that extend beyond single-shot code edits. By combining research, strategic planning, and implementation into a cohesive workflow, RA.Aid can:
-
-- Break down and execute multi-step programming tasks
-- Research and analyze complex codebases to answer architectural questions
-- Plan and implement significant code changes across multiple files
-- Provide detailed explanations of existing code structure and functionality
-- Execute sophisticated refactoring operations with proper planning
-
-## Table of Contents
-
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Architecture](#architecture)
-- [Dependencies](#dependencies)
-- [Development Setup](#development-setup)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+- **Structured Approach**: Provides a clear, step-by-step process from initial concept to final deployment.
+- **Flexibility**: Adaptable to various project sizes and types, whether you're building a simple tool or a complex system.
+- **Enhanced Collaboration**: Promotes effective teamwork and communication through defined roles and documentation practices.
+- **Quality Assurance**: Emphasizes thorough testing and refinement to ensure high-quality outcomes.
 
 ## Features
 
-- **Three-Stage Architecture**: The workflow consists of three powerful stages:
-  1. **Research** 🔍 - Gather and analyze information
-  2. **Planning** 📋 - Develop execution strategy
-  3. **Implementation** ⚡ - Execute the plan with AI assistance
-  
-  Each stage is powered by dedicated AI agents and specialized toolsets.
-- **Advanced AI Integration**: Built on LangChain and leverages the latest LLMs for natural language understanding and generation.
-- **Human-in-the-Loop Interaction**: Optional mode that enables the agent to ask you questions during task execution, ensuring higher accuracy and better handling of complex tasks that may require your input or clarification
-- **Comprehensive Toolset**:
-  - Shell command execution
-  - Expert querying system
-  - File operations and management
-  - Memory management
-  - Research and planning tools
-  - Code analysis capabilities
-- **Interactive CLI Interface**: Simple yet powerful command-line interface for seamless interaction
-- **Modular Design**: Structured as a Python package with specialized modules for console output, processing, text utilities, and tools
-- **Git Integration**: Built-in support for Git operations and repository management
+- **Comprehensive Methodology**: Guides you through every phase of development, ensuring no aspect is overlooked.
+- **Documentation-Focused**: Encourages detailed documentation at each step, facilitating maintenance and scalability.
+- **Tool Integration**: Utilizes advanced tools like **Perplexity** for research and **AIDER.chat** for rapid development and integration.
+- **Reflective Practices**: Incorporates reflection at each stage to justify decisions and consider improvements.
+
+## User Guide
+
+### Getting Started
+
+1. **Specification**: Define the project’s objectives, requirements, and user scenarios to create a solid foundation.
+2. **Pseudocode**: Develop a high-level pseudocode outline that serves as a roadmap for implementation.
+3. **Architecture**: Design a scalable and maintainable system architecture that aligns with project requirements.
+4. **Refinement**: Iteratively improve the design and codebase for enhanced performance and reliability.
+5. **Completion**: Finalize the project through extensive testing, documentation, and deployment preparations.
+
+### Detailed Steps
+
+#### 1. Specification
+
+- **Define Objectives**: Clearly outline what the project aims to achieve.
+- **Gather Requirements**: Collect both functional and non-functional requirements.
+- **Analyze User Scenarios**: Understand how end-users will interact with the application.
+- **Establish UI/UX Guidelines**: Set design standards and user experience principles.
+
+#### 2. Pseudocode
+
+- **High-Level Outline**: Create a roadmap of the application's logic and flow.
+- **Language Considerations**: Prepare pseudocode that can be adapted to languages like Python, JavaScript, and TypeScript.
+- **Inline Comments**: Include detailed comments to explain complex logic and assumptions.
+
+#### 3. Architecture
+
+- **Design System Components**: Define the building blocks of the application.
+- **Select Technology Stack**: Choose appropriate frameworks and tools.
+- **Create Diagrams**: Visualize the system architecture for better understanding and communication.
+
+#### 4. Refinement
+
+- **Optimize Performance**: Improve the efficiency of algorithms and system components.
+- **Enhance Maintainability**: Refactor code to make it more readable and easier to manage.
+- **Incorporate Feedback**: Use stakeholder and team feedback to guide improvements.
+
+#### 5. Completion
+
+- **Testing**: Conduct unit, integration, and system tests to ensure functionality and reliability.
+- **Documentation**: Finalize user guides, technical docs, and deployment procedures.
+- **Deployment Preparation**: Prepare deployment plans and rollback strategies.
+- **Post-Deployment Monitoring**: Set up tools to monitor application performance and user feedback.
+
+### Workflow Diagram
+
+```mermaid
+graph LR
+    A[Specification] --> B[Pseudocode]
+    B --> C[Architecture]
+    C --> D[Refinement]
+    D --> E[Completion]
+```
 
 ## Installation
 
-RA.Aid can be installed directly using pip:
-
-```bash
-pip install ra-aid
-```
-
 ### Prerequisites
 
-Before using RA.Aid, you'll need:
+- **Git**: Version control system to manage your project repository.
+- **Node.js**: JavaScript runtime for building and running the application.
+- **Python**: Required if your project involves Python scripting.
+- **IDE/Text Editor**: Recommended editors include VS Code, PyCharm, or IntelliJ IDEA.
 
-1. Python package `aider` installed and available in your PATH:
-```bash
-pip install aider-chat
-```
+### Steps
 
-2. API keys for the required AI services:
+1. **Clone the Repository**
+    ```bash
+    git clone https://github.com/yourusername/sparc-framework.git
+    cd sparc-framework
+    ```
 
-```bash
-# Set up API keys based on your preferred provider:
+2. **Install Dependencies**
+    ```bash
+    npm install
+    ```
 
-# For Anthropic Claude models (recommended)
-export ANTHROPIC_API_KEY=your_api_key_here
+3. **Set Up Environment Variables**
+    - Create a `.env` file based on `sample.env`.
+    - Populate it with the necessary configuration details.
 
-# For OpenAI models
-export OPENAI_API_KEY=your_api_key_here
-
-# For OpenRouter provider (optional)
-export OPENROUTER_API_KEY=your_api_key_here
-
-# For OpenAI-compatible providers (optional)
-export OPENAI_API_BASE=your_api_base_url
-```
-
-Note: The programmer tool (aider) will automatically select its model based on your available API keys:
-- If ANTHROPIC_API_KEY is set, it will use Claude models
-- If only OPENAI_API_KEY is set, it will use OpenAI models
-- You can set multiple API keys to enable different features
-
-You can get your API keys from:
-- Anthropic API key: https://console.anthropic.com/
-- OpenAI API key: https://platform.openai.com/api-keys
-- OpenRouter API key: https://openrouter.ai/keys
+4. **Run the Application**
+    ```bash
+    npm start
+    ```
 
 ## Usage
 
-RA.Aid is designed to be simple yet powerful. Here's how to use it:
+### Running the SPARC Workflow
 
-```bash
-# Basic usage
-ra-aid -m "Your task or query here"
+1. **Start with Specification**
+    - Navigate to `specification/Specification.md` and begin defining your project.
 
-# Research-only mode (no implementation)
-ra-aid -m "Explain the authentication flow" --research-only
-```
+2. **Develop Pseudocode**
+    - Use `specification/Pseudocode.md` to outline your application's logic.
 
-### Command Line Options
+3. **Design Architecture**
+    - Refer to `specification/Architecture.md` for structuring your system.
 
-- `-m, --message`: The task or query to be executed (required)
-- `--research-only`: Only perform research without implementation
-- `--cowboy-mode`: Skip interactive approval for shell commands
-- `--hil, -H`: Enable human-in-the-loop mode, allowing the agent to interactively ask you questions during task execution
-- `--provider`: Specify the model provider (See Model Configuration section)
-- `--model`: Specify the model name (See Model Configuration section)
-- `--expert-provider`: Specify the provider for the expert tool (defaults to OpenAI)
-- `--expert-model`: Specify the model name for the expert tool (defaults to o1-preview for OpenAI)
-- `--chat`: Enable chat mode for interactive assistance
+4. **Iterate with Refinement**
+    - Continuously improve your design using `specification/Refinement.md`.
 
-### Model Configuration
+5. **Finalize Completion**
+    - Ensure your project is deployment-ready with `specification/Completion.md`.
 
-RA.Aid supports multiple AI providers and models. The default model is Anthropic's Claude 3 Sonnet (`claude-3-5-sonnet-20241022`).
+### Example Project
 
-The programmer tool (aider) automatically selects its model based on your available API keys. It will use Claude models if ANTHROPIC_API_KEY is set, or fall back to OpenAI models if only OPENAI_API_KEY is available.
+To see the SPARC Framework in action, refer to the [Example Project](https://github.com/yourusername/example-project). This project demonstrates how each SPARC step is implemented from start to finish.
 
-Note: The expert tool can be configured to use different providers (OpenAI, Anthropic, OpenRouter) using the --expert-provider flag along with the corresponding EXPERT_*API_KEY environment variables. Each provider requires its own API key set through the appropriate environment variable.
+## Advanced Applications
 
-#### Environment Variables
+The SPARC Framework is flexible and can be adapted to various development scenarios, including:
 
-RA.Aid supports multiple providers through environment variables:
+- **Large-Scale Projects**: Manage complex projects with multiple teams and interdependent components.
+- **Rapid Prototyping**: Quickly develop and iterate on prototypes to explore ideas and validate concepts.
+- **Maintenance and Upgrades**: Efficiently manage ongoing maintenance and future upgrades with a clear architectural vision.
+- **Integration Projects**: Seamlessly integrate with existing systems and third-party services through well-defined integration points.
 
-- `ANTHROPIC_API_KEY`: Required for the default Anthropic provider
-- `OPENAI_API_KEY`: Required for OpenAI provider
-- `OPENROUTER_API_KEY`: Required for OpenRouter provider
-- `OPENAI_API_BASE`: Required for OpenAI-compatible providers along with `OPENAI_API_KEY`
+### Case Studies
 
-Expert Tool Environment Variables:
-- `EXPERT_OPENAI_API_KEY`: API key for expert tool using OpenAI provider
-- `EXPERT_ANTHROPIC_API_KEY`: API key for expert tool using Anthropic provider
-- `EXPERT_OPENROUTER_API_KEY`: API key for expert tool using OpenRouter provider  
-- `EXPERT_OPENAI_API_BASE`: Base URL for expert tool using OpenAI-compatible provider
-
-You can set these permanently in your shell's configuration file (e.g., `~/.bashrc` or `~/.zshrc`):
-
-```bash
-# Default provider (Anthropic)
-export ANTHROPIC_API_KEY=your_api_key_here
-
-# For OpenAI features and expert tool
-export OPENAI_API_KEY=your_api_key_here
-
-# For OpenRouter provider
-export OPENROUTER_API_KEY=your_api_key_here
-
-# For OpenAI-compatible providers
-export OPENAI_API_BASE=your_api_base_url
-```
-
-Note: The expert tool defaults to OpenAI's o1-preview model with the OpenAI provider, but this can be configured using the --expert-provider flag along with the corresponding EXPERT_*_KEY environment variables.
-
-#### Examples
-
-1. **Using Anthropic (Default)**
-   ```bash
-   # Uses default model (claude-3-5-sonnet-20241022)
-   ra-aid -m "Your task"
-
-   # Or explicitly specify:
-   ra-aid -m "Your task" --provider anthropic --model claude-3-5-sonnet-20241022
-   ```
-
-2. **Using OpenAI**
-   ```bash
-   ra-aid -m "Your task" --provider openai --model gpt-4o
-   ```
-
-3. **Using OpenRouter**
-   ```bash
-   ra-aid -m "Your task" --provider openrouter --model mistralai/mistral-large-2411
-   ```
-
-4. **Configuring Expert Provider**
-
-   The expert tool is used by the agent for complex logic and debugging tasks. It can be configured to use different providers (OpenAI, Anthropic, OpenRouter) using the --expert-provider flag along with the corresponding EXPERT_*API_KEY environment variables.
-
-   ```bash
-   # Use Anthropic for expert tool
-   export EXPERT_ANTHROPIC_API_KEY=your_anthropic_api_key
-   ra-aid -m "Your task" --expert-provider anthropic --expert-model claude-3-5-sonnet-20241022
-
-   # Use OpenRouter for expert tool
-   export OPENROUTER_API_KEY=your_openrouter_api_key
-   ra-aid -m "Your task" --expert-provider openrouter --expert-model mistralai/mistral-large-2411
-
-   # Use default OpenAI for expert tool
-   export EXPERT_OPENAI_API_KEY=your_openai_api_key
-   ra-aid -m "Your task" --expert-provider openai --expert-model o1-preview
-   ```
-
-**Important Notes:**
-- Performance varies between models. The default Claude 3 Sonnet model currently provides the best and most reliable results.
-- Model configuration is done via command line arguments: `--provider` and `--model`
-- The `--model` argument is required for all providers except Anthropic (which defaults to `claude-3-5-sonnet-20241022`)
-
-### Example Tasks
-
-1. Code Analysis:
-   ```bash
-   ra-aid -m "Explain how the authentication middleware works" --research-only
-   ```
-
-2. Complex Changes:
-   ```bash
-   ra-aid -m "Refactor the database connection code to use connection pooling" --cowboy-mode
-   ```
-
-3. Automated Updates:
-   ```bash
-   ra-aid -m "Update deprecated API calls across the entire codebase" --cowboy-mode
-   ```
-
-4. Code Research:
-   ```bash
-   ra-aid -m "Analyze the current error handling patterns" --research-only
-   ```
-
-2. Code Research:
-   ```bash
-   ra-aid -m "Explain how the authentication middleware works" --research-only
-   ```
-
-3. Refactoring:
-   ```bash
-   ra-aid -m "Refactor the database connection code to use connection pooling" --cowboy-mode
-   ```
-
-### Shell Command Automation with Cowboy Mode 🏇
-
-The `--cowboy-mode` flag enables automated shell command execution without confirmation prompts. This is useful for:
-
-- CI/CD pipelines
-- Automated testing environments
-- Batch processing operations
-- Scripted workflows
-
-```bash
-ra-aid -m "Update all deprecated API calls" --cowboy-mode
-```
-
-**⚠️ Important Safety Notes:**
-- Cowboy mode skips confirmation prompts for shell commands
-- Always use in version-controlled repositories
-- Ensure you have a clean working tree before running
-- Review changes in git diff before committing
-
-### Human-in-the-Loop Mode
-
-Enable interactive mode to allow the agent to ask you questions during task execution:
-
-```bash
-ra-aid -m "Implement a new feature" --hil
-# or
-ra-aid -m "Implement a new feature" -H
-```
-
-This mode is particularly useful for:
-- Complex tasks requiring human judgment
-- Clarifying ambiguous requirements
-- Making architectural decisions
-- Validating critical changes
-- Providing domain-specific knowledge
-
-### Chat Mode
-<img src="assets/demo-chat-mode-1.gif" alt="Chat Mode Demo" autoplay loop style="display: block; margin: 0 auto; width: 100%; max-width: 800px;">
-
-Enable with `--chat` to transform ra-aid into an interactive assistant that guides you through research and implementation tasks. Have a natural conversation about what you want to build, explore options together, and dispatch work - all while maintaining context of your discussion. Perfect for when you want to think through problems collaboratively rather than just executing commands.
-
-### Environment Variables
-
-See the [Model Configuration](#model-configuration) section for details on provider-specific environment variables.
-
-## Architecture
-
-
-RA.Aid implements a three-stage architecture for handling development and research tasks:
-
-1. **Research Stage**: 
-   - Gathers information and context
-   - Analyzes requirements
-   - Identifies key components and dependencies
-
-2. **Planning Stage**:
-   - Develops detailed implementation plans
-   - Breaks down tasks into manageable steps
-   - Identifies potential challenges and solutions
-
-3. **Implementation Stage**:
-   - Executes planned tasks
-   - Generates code or documentation
-   - Performs necessary system operations
-
-### Core Components
-
-- **Console Module** (`console/`): Handles console output formatting and user interaction
-- **Processing Module** (`proc/`): Manages interactive processing and workflow control
-- **Text Module** (`text/`): Provides text processing and manipulation utilities
-- **Tools Module** (`tools/`): Contains various utility tools for file operations, search, and more
-
-## Dependencies
-
-### Core Dependencies
-- `langchain-anthropic`: LangChain integration with Anthropic's Claude
-- `langgraph`: Graph-based workflow management
-- `rich>=13.0.0`: Terminal formatting and output
-- `GitPython==3.1.41`: Git repository management
-- `fuzzywuzzy==0.18.0`: Fuzzy string matching
-- `python-Levenshtein==0.23.0`: Fast string matching
-- `pathspec>=0.11.0`: Path specification utilities
-
-### Development Dependencies
-- `pytest>=7.0.0`: Testing framework
-- `pytest-timeout>=2.2.0`: Test timeout management
-
-## Development Setup
-
-1. Clone the repository:
-```bash
-git clone https://github.com/ai-christianson/ra-aid.git
-cd ra-aid
-```
-
-2. Create and activate a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-```
-
-3. Install development dependencies:
-```bash
-pip install -r requirements-dev.txt
-```
-
-4. Run tests:
-```bash
-python -m pytest
-```
+- **E-commerce Platform**: Utilizing SPARC to build a scalable online marketplace.
+- **Mobile Application**: Applying SPARC for developing a cross-platform mobile app.
+- **Enterprise Software**: Managing enterprise-level software projects with SPARC's structured approach.
 
 ## Contributing
 
-Contributions are welcome! Please follow these steps:
+We welcome contributions to enhance the SPARC Framework. To contribute, please follow these guidelines:
 
-1. Fork the repository
-2. Create a feature branch:
-```bash
-git checkout -b feature/your-feature-name
-```
+1. **Fork the Repository**
+2. **Create a New Branch**
+    ```bash
+    git checkout -b feature/YourFeature
+    ```
+3. **Make Changes**
+4. **Commit Your Changes**
+    ```bash
+    git commit -m "Add your message"
+    ```
+5. **Push to the Branch**
+    ```bash
+    git push origin feature/YourFeature
+    ```
+6. **Open a Pull Request**
 
-3. Make your changes and commit:
-```bash
-git commit -m 'Add some feature'
-```
-
-4. Push to your fork:
-```bash
-git push origin feature/your-feature-name
-```
-
-5. Open a Pull Request
-
-### Guidelines
-
-- Follow PEP 8 style guidelines
-- Add tests for new features
-- Update documentation as needed
-- Keep commits focused and message clear
-- Ensure all tests pass before submitting PR
+Please ensure that your contributions adhere to the [Coding Standards](./configuration/CONVENTIONS.md) outlined in the project.
 
 ## License
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
-
-Copyright (c) 2024 AI Christianson
+This project is licensed under the [MIT License](./LICENSE).
 
 ## Contact
 
-- **Issues**: Please report bugs and feature requests on our [Issue Tracker](https://github.com/ai-christianson/ra-aid/issues)
-- **Repository**: [https://github.com/ai-christianson/ra-aid](https://github.com/ai-christianson/ra-aid)
-- **Documentation**: [https://github.com/ai-christianson/ra-aid#readme](https://github.com/ai-christianson/ra-aid#readme)
+For questions, suggestions, or support, please reach out to [your.email@example.com](mailto:your.email@example.com).
+
+## Acknowledgements
+
+- **Perplexity**: For providing valuable research tools.
+- **AIDER.chat**: For facilitating rapid development and integration.
+- **OpenAI**: For the GPT models that enhance the SPARC Framework's capabilities.
