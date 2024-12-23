@@ -2,8 +2,8 @@ from langchain_core.tools import tool
 from typing import Dict
 from pathlib import Path
 from rich.panel import Panel
-from ra_aid.console import console
-from ra_aid.console.formatting import print_error
+from sparc_cli.console import console
+from sparc_cli.console.formatting import print_error
 
 def truncate_display_str(s: str, max_length: int = 30) -> str:
     """Truncate a string for display purposes if it exceeds max length.

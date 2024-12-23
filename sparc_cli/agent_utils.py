@@ -10,14 +10,14 @@ import time
 from typing import Optional
 
 from langgraph.prebuilt import create_react_agent
-from ra_aid.console.formatting import print_stage_header, print_error, print_interrupt
-from ra_aid.console.output import print_agent_output
-from ra_aid.tool_configs import (
+from sparc_cli.console.formatting import print_stage_header, print_error, print_interrupt
+from sparc_cli.console.output import print_agent_output
+from sparc_cli.tool_configs import (
     get_implementation_tools,
     get_research_tools,
     get_planning_tools
 )
-from ra_aid.prompts import (
+from sparc_cli.prompts import (
     IMPLEMENTATION_PROMPT,
     EXPERT_PROMPT_SECTION_IMPLEMENTATION,
     HUMAN_PROMPT_SECTION_IMPLEMENTATION,
@@ -38,13 +38,13 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.panel import Panel
 
-from ra_aid.tools.memory import (
+from sparc_cli.tools.memory import (
     _global_memory,
     get_memory_value,
     get_related_files,
 )
-from ra_aid.tool_configs import get_research_tools
-from ra_aid.prompts import (
+from sparc_cli.tool_configs import get_research_tools
+from sparc_cli.prompts import (
     RESEARCH_PROMPT,
     RESEARCH_ONLY_PROMPT,
     EXPERT_PROMPT_SECTION_RESEARCH,

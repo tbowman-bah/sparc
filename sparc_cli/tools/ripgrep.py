@@ -3,8 +3,8 @@ from langchain_core.tools import tool
 from rich.console import Console
 from rich.panel import Panel
 from rich.markdown import Markdown
-from ra_aid.proc.interactive import run_interactive_command
-from ra_aid.text.processing import truncate_output
+from sparc_cli.proc.interactive import run_interactive_command
+from sparc_cli.text.processing import truncate_output
 
 console = Console()
 

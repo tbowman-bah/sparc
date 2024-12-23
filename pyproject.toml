@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "ra-aid"
+name = "sparc-cli"
 dynamic = ["version"]
-description = "RA.Aid - ReAct Aid"
+description = "SPARC CLI - SPARC Framework Command Line Interface"
 readme = "README.md"
 license = {file = "LICENSE"}
 requires-python = ">=3.8"
@@ -43,7 +43,7 @@ dev = [
 ]
 
 [project.scripts]
-ra-aid = "ra_aid.__main__:main"
+sparc = "sparc_cli.__main__:main"
 
 [project.urls]
 Homepage = "https://github.com/ai-christianson/sparc"
@@ -52,10 +52,10 @@ Repository = "https://github.com/ai-christianson/sparc.git"
 Issues = "https://github.com/ai-christianson/sparc/issues"
 
 [tool.setuptools.dynamic]
-version = {attr = "ra_aid.version.__version__"}
+version = {attr = "sparc_cli.version.__version__"}
 
 [tool.hatch.version]
-path = "ra_aid/__version__.py"
+path = "sparc_cli/__version__.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["ra_aid"]
+packages = ["sparc_cli"]

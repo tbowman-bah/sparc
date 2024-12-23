@@ -3,10 +3,10 @@ from langchain_core.tools import tool
 from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
-from ra_aid.tools.memory import _global_memory
-from ra_aid.proc.interactive import run_interactive_command
-from ra_aid.text.processing import truncate_output
-from ra_aid.console.cowboy_messages import get_cowboy_message
+from sparc_cli.tools.memory import _global_memory
+from sparc_cli.proc.interactive import run_interactive_command
+from sparc_cli.text.processing import truncate_output
+from sparc_cli.console.cowboy_messages import get_cowboy_message
 
 console = Console()
 

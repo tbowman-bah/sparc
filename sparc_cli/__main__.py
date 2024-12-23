@@ -3,39 +3,39 @@ import sys
 import uuid
 from rich.panel import Panel
 from rich.console import Console
-from ra_aid.console.formatting import print_interrupt
+from sparc_cli.console.formatting import print_interrupt
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
-from ra_aid.env import validate_environment
-from ra_aid.tools.memory import _global_memory, get_related_files, get_memory_value
-from ra_aid.tools.human import ask_human
-from ra_aid import print_stage_header, print_error
-from ra_aid.agent_utils import (
+from sparc_cli.env import validate_environment
+from sparc_cli.tools.memory import _global_memory, get_related_files, get_memory_value
+from sparc_cli.tools.human import ask_human
+from sparc_cli.console.formatting import print_stage_header, print_error
+from sparc_cli.agent_utils import (
     run_agent_with_retry,
     run_research_agent,
     run_planning_agent
 )
-from ra_aid.prompts import (
+from sparc_cli.prompts import (
     PLANNING_PROMPT,
     CHAT_PROMPT,
     EXPERT_PROMPT_SECTION_PLANNING,
     HUMAN_PROMPT_SECTION_PLANNING,
 )
-from ra_aid.llm import initialize_llm
+from sparc_cli.llm import initialize_llm
 
-from ra_aid.tool_configs import (
+from sparc_cli.tool_configs import (
     get_planning_tools,
     get_chat_tools
 )
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
-        description='RA.Aid - AI Agent for executing programming and research tasks',
+        description='SPARC CLI - AI Agent for executing programming and research tasks',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='''
 Examples:
-    ra-aid -m "Add error handling to the database module"
-    ra-aid -m "Explain the authentication flow" --research-only
+    sparc -m "Add error handling to the database module"
+    sparc -m "Explain the authentication flow" --research-only
         '''
     )
     parser.add_argument(
@@ -127,7 +127,7 @@ def is_stage_requested(stage: str) -> bool:
     return False
 
 def main():
-    """Main entry point for the ra-aid command line tool."""
+    """Main entry point for the sparc command line tool."""
     try:
         args = parse_arguments()
         expert_enabled, expert_missing = validate_environment(args)  # Will exit if main env vars missing

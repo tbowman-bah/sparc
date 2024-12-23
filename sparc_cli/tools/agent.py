@@ -6,8 +6,8 @@ from typing_extensions import TypeAlias
 
 ResearchResult = Dict[str, Union[str, bool, Dict[int, Any], List[Any], None]]
 from rich.console import Console
-from ra_aid.tools.memory import _global_memory
-from ra_aid.console.formatting import print_error, print_interrupt
+from sparc_cli.tools.memory import _global_memory
+from sparc_cli.console.formatting import print_error, print_interrupt
 from .memory import get_memory_value, get_related_files, get_work_log, reset_work_log
 from ..llm import initialize_llm
 from ..console import print_task_header

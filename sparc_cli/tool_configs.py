@@ -1,5 +1,5 @@
 from typing import List
-from ra_aid.tools import (
+from sparc_cli.tools import (
     ask_expert, ask_human, run_shell_command, run_programming_task,
     emit_research_notes, emit_plan, emit_related_files, emit_task,
     emit_expert_context, emit_key_facts, delete_key_facts,
@@ -8,8 +8,8 @@ from ra_aid.tools import (
     swap_task_order, monorepo_detected, existing_project_detected, ui_detected,
     task_completed, plan_implementation_completed
 )
-from ra_aid.tools.memory import one_shot_completed
-from ra_aid.tools.agent import request_research, request_implementation, request_research_and_implementation, request_task_implementation
+from sparc_cli.tools.memory import one_shot_completed
+from sparc_cli.tools.agent import request_research, request_implementation, request_research_and_implementation, request_task_implementation
 
 # Read-only tools that don't modify system state
 def get_read_only_tools(human_interaction: bool = False) -> list:
