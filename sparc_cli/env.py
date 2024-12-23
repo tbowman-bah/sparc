@@ -5,7 +5,7 @@ import sys
 from dataclasses import dataclass
 from typing import Tuple, List
 
-from ra_aid import print_error
+from sparc_cli.console.formatting import print_error
 
 @dataclass
 class ProviderConfig:

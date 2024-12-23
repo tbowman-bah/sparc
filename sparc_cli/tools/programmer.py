@@ -6,9 +6,9 @@ from rich.panel import Panel
 from rich.syntax import Syntax
 from rich.markdown import Markdown
 from rich.text import Text
-from ra_aid.proc.interactive import run_interactive_command
+from sparc_cli.proc.interactive import run_interactive_command
 from pydantic import BaseModel, Field
-from ra_aid.text.processing import truncate_output
+from sparc_cli.text.processing import truncate_output
 
 console = Console()
 
@@ -31,7 +31,7 @@ They are intelligent and can edit multiple files.
 
 If new files are created, emit them after finishing.
 
-They can add/modify files, but not remove. Use run_shell_command to remove files. If referencing files you’ll delete, remove them after they finish.
+They can add/modify files, but not remove. Use run_shell_command to remove files. If referencing files you'll delete, remove them after they finish.
 
 Args: instructions: Programming task instructions files: Optional; if not provided, uses related_files
 
