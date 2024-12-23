@@ -2,9 +2,17 @@
 
 Version: 0.8.2
 
-SPARC CLI is a powerful command-line tool for executing programming and research tasks using AI assistance.
+SPARC CLI is a powerful command-line interface that implements the SPARC Framework methodology for AI-assisted software development. Combining autonomous research capabilities with guided implementation, it provides a comprehensive toolkit for analyzing codebases, planning changes, and executing development tasks with advanced AI assistance.
 
-## Features
+## Key Benefits
+
+- **Framework Integration**: Seamlessly implements SPARC Framework's methodology for systematic software development
+- **Autonomous Capabilities**: Provides both research analysis and guided implementation with AI assistance
+- **Safety Controls**: Features human-in-the-loop controls and review mechanisms for AI actions
+- **Provider Flexibility**: Supports multiple LLM providers (Anthropic, OpenAI, OpenRouter) for diverse needs
+- **Development Workflow**: Enhances productivity through AI-assisted analysis, planning, and implementation
+
+## Core Features
 
 - Research and implementation capabilities
 - Multiple LLM provider support (Anthropic, OpenAI, OpenRouter)
@@ -14,13 +22,27 @@ SPARC CLI is a powerful command-line tool for executing programming and research
 - Shell command execution with "cowboy mode"
 - Rich console output formatting
 
+## Autonomous Capabilities
+
+- Autonomous Research: Analyze codebases and provide insights without making changes
+- Autonomous Implementation: Plan and execute code changes with AI guidance
+- Human-in-the-loop Controls: Review and approve AI actions during execution
+- Expert Knowledge Integration: Access specialized knowledge for complex analysis
+- Shell Command Automation: Execute system commands autonomously in cowboy mode
+
 ## Installation
 
+Requires Python 3.8 or higher.
+
+### Quick Install
 ```bash
-pip install sparc-cli
+./install.sh
 ```
 
-Requires Python 3.8 or higher.
+### Manual Install
+```bash
+pip install -e .
+```
 
 ## Usage
 
@@ -44,17 +66,17 @@ sparc -m "Your task description" [options]
 ### Examples
 
 ```bash
-# Standard task execution
-sparc -m "Add error handling to the database module"
+# Autonomous research analysis
+sparc -m "Analyze the security of my Flask application" --research-only
 
-# Research-only query
-sparc -m "Explain the authentication flow" --research-only
+# Autonomous implementation with human oversight
+sparc -m "Add input validation to user registration" --hil
 
-# Interactive chat mode
-sparc --chat
+# Expert knowledge consultation
+sparc -m "Review authentication implementation" --expert-model gpt-4
 
-# Using specific provider/model
-sparc -m "Optimize database queries" --provider openai --model gpt-4
+# Autonomous shell command execution
+sparc -m "Run test suite and analyze failures" --cowboy-mode
 ```
 
 ## Acknowledgments
