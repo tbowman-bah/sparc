@@ -8,7 +8,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='sparc',
-    version='0.83',
+    version='0.84',
     packages=find_packages(),
     install_requires=[
         'twine',

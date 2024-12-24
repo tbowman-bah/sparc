@@ -118,7 +118,7 @@ The **SPARC Framework** is a comprehensive methodology designed to guide the dev
 
 # SPARC CLI
 
-Version: 0.8.2
+Version: 0.84
 
 SPARC CLI is a powerful command-line interface that implements the SPARC Framework methodology for AI-assisted software development. Combining autonomous research capabilities with guided implementation, it provides a comprehensive toolkit for analyzing codebases, planning changes, and executing development tasks with advanced AI assistance.
 
@@ -161,12 +161,17 @@ SPARC CLI is a powerful command-line interface that implements the SPARC Framewo
 
 Requires Python 3.8 or higher.
 
-### Quick Install
+### Install from PyPI
+```bash
+pip install sparc
+```
+
+### Quick Install (Development)
 ```bash
 ./install.sh
 ```
 
-### Manual Install
+### Manual Install (Development)
 ```bash
 pip install -e .
 ```
@@ -206,32 +211,19 @@ graph LR
 
 ### Prerequisites
 
-- **Git**: Version control system to manage your project repository.
-- **Node.js**: JavaScript runtime for building and running the application.
-- **Python**: Required if your project involves Python scripting.
-- **IDE/Text Editor**: Recommended editors include VS Code, PyCharm, or IntelliJ IDEA.
+- **Python**: Python 3.8 or higher
+- **Git**: Version control system to manage your project repository
+- **IDE/Text Editor**: Recommended editors include VS Code, PyCharm, or IntelliJ IDEA
 
-### Steps
+### Install SPARC CLI
 
-1. **Clone the Repository**
-    ```bash
-    git clone https://github.com/yourusername/sparc-framework.git
-    cd sparc-framework
-    ```
+```bash
+pip install sparc
+```
 
-2. **Install Dependencies**
-    ```bash
-    npm install
-    ```
-
-3. **Set Up Environment Variables**
-    - Create a `.env` file based on `sample.env`.
-    - Populate it with the necessary configuration details.
-
-4. **Run the Application**
-    ```bash
-    npm start
-    ```
+### Set Up Environment Variables
+- Create a `.env` file based on `sample.env`
+- Populate it with the necessary configuration details
 
 ## Usage
 
@@ -295,12 +287,17 @@ The SPARC CLI provides powerful tooling for AI-assisted software development, im
 - Python 3.8 or higher
 - pip package manager
 
-#### Quick Install
+#### Install from PyPI
+```bash
+pip install sparc
+```
+
+#### Quick Install (Development)
 ```bash
 ./install.sh
 ```
 
-#### Manual Install
+#### Manual Install (Development)
 ```bash
 pip install -e .
 ```

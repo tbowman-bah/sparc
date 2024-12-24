@@ -1,6 +1,6 @@
 # SPARC CLI
 
-Version: 0.8.2
+Version: 0.84
 
 SPARC CLI is a powerful command-line interface that implements the SPARC Framework methodology for AI-assisted software development. Combining autonomous research capabilities with guided implementation, it provides a comprehensive toolkit for analyzing codebases, planning changes, and executing development tasks with advanced AI assistance.
 
@@ -11,6 +11,9 @@ SPARC CLI is a powerful command-line interface that implements the SPARC Framewo
 - **Safety Controls**: Features human-in-the-loop controls and review mechanisms for AI actions
 - **Provider Flexibility**: Supports multiple LLM providers (Anthropic, OpenAI, OpenRouter) for diverse needs
 - **Development Workflow**: Enhances productivity through AI-assisted analysis, planning, and implementation
+- **Quantum-Coherent Analysis**: Optimizes code structure through advanced complexity analysis
+- **Consciousness Integration**: Leverages pseudo consciousness for enhanced decision-making capabilities
+- **Symbolic Reasoning**: Enables sophisticated pattern recognition and code optimization
 
 ## Core Features
 
@@ -21,6 +24,12 @@ SPARC CLI is a powerful command-line interface that implements the SPARC Framewo
 - Expert knowledge queries
 - Shell command execution with "cowboy mode"
 - Rich console output formatting
+- Quantum consciousness calculation capabilities
+- Integrated symbolic reasoning
+- Quantum-coherent complexity features
+- Advanced pattern recognition and complexity management
+- Self-aware coding processes and intelligent optimization
+- Combined classical and quantum-inspired reasoning
 
 ## Autonomous Capabilities
 
@@ -33,6 +42,11 @@ SPARC CLI is a powerful command-line interface that implements the SPARC Framewo
 ## Installation
 
 Requires Python 3.8 or higher.
+
+### PyPI Install
+```bash
+pip install sparc
+```
 
 ### Quick Install
 ```bash
@@ -73,8 +87,7 @@ sparc -m "Analyze the security of my Flask application" --research-only
 sparc -m "Add input validation to user registration" --hil
 
 # Expert knowledge consultation
-sparc -m "Review authentication implementation" --expert-model gpt-4
-
+sparc -m "Review authentication implementation" --expert-model o1-preview
 # Autonomous shell command execution
 sparc -m "Run test suite and analyze failures" --cowboy-mode
 ```
