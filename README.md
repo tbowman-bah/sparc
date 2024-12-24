@@ -12,6 +12,16 @@
 
 The **SPARC Framework** is a comprehensive methodology designed to guide the development of robust and scalable applications. SPARC stands for **Specification**, **Pseudocode**, **Architecture**, **Refinement**, and **Completion**. Each step ensures thorough planning, execution, and reflection throughout the project lifecycle.
 
+## Installation
+
+Requires Python 3.8 or higher.
+
+### Install from PyPI
+```bash
+pip install sparc
+```
+
+
 ### Why SPARC?
 
 - **Structured Approach**: Provides a clear, step-by-step process from initial concept to final deployment.
