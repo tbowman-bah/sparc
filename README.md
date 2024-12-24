@@ -1,4 +1,8 @@
+
+
 # SPARC Framework
+
+![SPARC CLI](assets/sparc_cli.png.png)
 
 ![License](https://img.shields.io/github/license/ruvnet/sparc)
 ![GitHub issues](https://img.shields.io/github/issues/ruvnet/sparc)
