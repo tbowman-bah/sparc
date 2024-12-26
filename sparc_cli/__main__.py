@@ -144,6 +144,11 @@ def main():
         # Create the base model after validation
         model = initialize_llm(args.provider, args.model)
 
+        # If no message is provided, default to chat mode
+        if not args.message:
+            args.chat = True
+            args.hil = True  # Chat mode implies hil
+
         # Handle chat mode
         if args.chat:
             print_stage_header("Chat Mode")
@@ -176,11 +181,6 @@ def main():
             # Run chat agent and exit
             run_agent_with_retry(chat_agent, CHAT_PROMPT.format(initial_request=initial_request), config)
             return
-
-        # Validate message is provided
-        if not args.message:
-            print_error("--message is required")
-            sys.exit(1)
             
         base_task = args.message
         config = {
