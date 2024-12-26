@@ -6,7 +6,7 @@
 
 What if large language models could pay closer attention to the **right** words at the **right** time—just like a skilled detective scanning a text to find the most relevant clues? That’s precisely the idea behind **PolarisOne**, a research initiative to make AI-powered language models (often called “LLMs”) more efficient, interpretable, and effective. By selectively highlighting critical tokens (i.e., specific words or short phrases) and deciding whether to explore or ignore them, PolarisOne promises to **speed up** AI-driven reasoning and **improve** accuracy.
 
-In the last few years, LLMs such as GPT-3 and BERT have demonstrated near “magical” results, from writing complete essays to answering complex questions. However, these models often read **every** token with more or less uniform attention, leading to huge computational needs (read: lots of power usage) and occasional “reasoning” mistakes. The PolarisOne framework aims to tackle these issues head-on by focusing on two key components:
+In the last few years, LLMs such as GPT-4 and Claude have demonstrated near “magical” results, from writing complete essays to answering complex questions. However, these models often read **every** token with more or less uniform attention, leading to huge computational needs (read: lots of power usage) and occasional “reasoning” mistakes. The PolarisOne framework aims to tackle these issues head-on by focusing on two key components:
 
 1. **Adaptive Token Weighting (ATW)** — a method for dynamically boosting or dimming the importance of each token in a text.  
 2. **Focused Thought Sequence (FTS)** — a staged or “checkpointed” approach that prunes irrelevant content on the fly.
