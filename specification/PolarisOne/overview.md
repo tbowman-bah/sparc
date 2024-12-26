@@ -1,7 +1,3 @@
-Below is a **magazine-style technical review** summarizing the key ideas behind the *PolarisOne* system, including its improvements, in more accessible language.
-
----
-
 # PolarisOne: A Spotlight on Smarter Language Models
 
 **By the AI Innovations Editorial Team**
