@@ -650,7 +650,7 @@ def get_memory_value(key: str) -> str:
             facts.extend([
                 f"## 🔑 Key Fact #{k}",
                 "",  # Empty line for better markdown spacing
-                v,
+                v['content'],
                 ""  # Empty line between facts
             ])
         return "\n".join(facts).rstrip()  # Remove trailing newline
