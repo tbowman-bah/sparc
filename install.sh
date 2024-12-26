@@ -14,7 +14,8 @@ main() {
     deps
 
     echo -e "\n${GREEN}Installation complete!${NC}"
-    echo 'You can now use sparc. Try: sparc --help'
+    echo 'First, always load your environment: source .venv/bin/activate'
+    echo 'Then you can use sparc. Try: sparc --help'
 }
 
 init() {
