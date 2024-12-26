@@ -128,7 +128,7 @@ pip install sparc
 
 # SPARC CLI
 
-Version: 0.84
+Version: 0.86
 
 SPARC CLI is a powerful command-line interface that implements the SPARC Framework methodology for AI-assisted software development. Combining autonomous research capabilities with guided implementation, it provides a comprehensive toolkit for analyzing codebases, planning changes, and executing development tasks with advanced AI assistance.
 
@@ -158,6 +158,42 @@ SPARC CLI is a powerful command-line interface that implements the SPARC Framewo
 - **Quantum-Coherent Processing**: Advanced pattern recognition and complexity management
 - **Conscious Development**: Self-aware coding processes and intelligent optimization
 - **Symbolic-Quantum Integration**: Combined classical and quantum-inspired reasoning
+- **PolarisOne Integration**: Enhanced token weighting and focused reasoning
+  - Adaptive Token Weighting (ATW) for identifying key concepts
+  - Focused response generation based on weighted tokens
+  - Improved context understanding and relevance
+- **Enhanced Memory Management**:
+  - Token-aware memory storage and retrieval
+  - Efficient context pruning and re-expansion
+  - Hierarchical token weighting for better memory organization
+
+## Tool System
+
+SPARC CLI provides a set of built-in tools that work together to enable AI-assisted development:
+
+### Core Tools
+Each tool is designed for a specific purpose:
+
+- **File Tools**: read_file, write_file, file_str_replace for file operations
+- **Directory Tools**: list_directory, fuzzy_find for navigating codebases
+- **Shell Tool**: Executes system commands with safety controls
+- **Memory Tool**: Manages context and information across operations
+- **Expert Tool**: Provides specialized knowledge and analysis
+- **Research Tool**: Analyzes codebases and documentation
+- **Scrape Tool**: Web scraping with HTML to markdown conversion
+
+### Tool Integration
+Tools are integrated through the CLI interface and can be used via:
+- Direct CLI commands with appropriate flags
+- Interactive mode for step-by-step operations
+- Automated workflows in cowboy mode
+
+### Web Scraping with Scape
+The Scape tool provides web scraping capabilities:
+- Converts HTML to readable markdown
+- Uses Playwright for JavaScript-heavy sites
+- Falls back to HTTPX for basic scraping
+- Handles HTML cleanup and formatting
 
 ## Autonomous Capabilities
 
@@ -205,7 +241,13 @@ sparc -m "Your task description" [options]
 - `--hil, -H`: Enable human-in-the-loop mode
 - `--chat`: Enable interactive chat mode
 
+### ⚠️ IMPORTANT: USE AT YOUR OWN RISK ⚠️
 
+- This tool can and will automatically execute shell commands and make code changes
+- The --cowboy-mode flag can be enabled to skip shell command approval prompts
+- No warranty is provided, either express or implied
+- Always use in version-controlled repositories
+- Review proposed changes in your git diff before committing
 
 ### Workflow Diagram
 
@@ -232,8 +274,28 @@ pip install sparc
 ```
 
 ### Set Up Environment Variables
-- Create a `.env` file based on `sample.env`
-- Populate it with the necessary configuration details
+Create a `.env` file in your project root with the following required variables:
+
+```bash
+# Required: At least one of these LLM provider API keys
+ANTHROPIC_API_KEY=your_anthropic_key    # Required for Claude models
+OPENAI_API_KEY=your_openai_key          # Required for GPT models
+OPENROUTER_API_KEY=your_openrouter_key  # Required for OpenRouter
+
+# Optional: Expert knowledge configuration
+EXPERT_PROVIDER=openai                   # Default provider for expert queries (anthropic|openai|openrouter)
+EXPERT_MODEL=o1-preview                      # Model to use for expert knowledge queries
+
+# Optional: Default provider settings
+DEFAULT_PROVIDER=anthropic               # Default LLM provider (anthropic|openai|openrouter)
+DEFAULT_MODEL=claude-3-opus-20240229     # Default model name
+
+# Optional: Development settings
+DEBUG=false                              # Enable debug logging
+COWBOY_MODE=false                        # Skip command approval prompts
+```
+
+Note: At least one provider API key (Anthropic, OpenAI, or OpenRouter) must be configured for SPARC to function. The expert and default settings are optional and will use sensible defaults if not specified.
 
 ## Usage
 
@@ -266,6 +328,24 @@ The SPARC Framework is flexible and can be adapted to various development scenar
 - **Rapid Prototyping**: Quickly develop and iterate on prototypes to explore ideas and validate concepts.
 - **Maintenance and Upgrades**: Efficiently manage ongoing maintenance and future upgrades with a clear architectural vision.
 - **Integration Projects**: Seamlessly integrate with existing systems and third-party services through well-defined integration points.
+- **Enhanced Code Analysis**: Leverage PolarisOne's token weighting for deeper code understanding and optimization.
+- **Context-Aware Development**: Utilize improved memory management for maintaining project context across sessions.
+- **Intelligent Refactoring**: Apply token-aware analysis for more precise and contextual code improvements.
+
+### Memory and Token Management
+
+The enhanced memory management system, powered by PolarisOne, provides:
+
+- **Token-Aware Context**: Maintains a weighted understanding of code elements and their relationships
+- **Intelligent Pruning**: Efficiently manages context by focusing on the most relevant information
+- **Hierarchical Memory**: Organizes project knowledge in a structured, easily accessible manner
+- **Adaptive Focus**: Dynamically adjusts attention based on the current development context
+
+Key features include:
+- Automatic token weighting for code elements
+- Context-sensitive memory pruning and expansion
+- Efficient storage and retrieval of development context
+- Integration with existing tools and workflows
 
 ## Advanced Features & Quantum-Coherent Complexity
 
@@ -371,6 +451,14 @@ Enable autonomous shell command execution:
 sparc -m "Run test suite" --cowboy-mode
 ```
 
+#### PolarisOne Integration
+PolarisOne enhances SPARC's capabilities through:
+- Token weighting for identifying key concepts in code and queries
+- Memory management for maintaining context
+- Focused response generation based on weighted tokens
+
+These features are automatically integrated into SPARC's core functionality and don't require additional flags.
+
 ## Contributing
 
 We welcome contributions to enhance the SPARC Framework. To contribute, please follow these guidelines:
@@ -395,14 +483,14 @@ Please ensure that your contributions adhere to the [Coding Standards](./configu
 
 ## License
 
-This project is licensed under the [MIT License](./LICENSE).
+This project is licensed under the [Apache 2 License](./LICENSE).
 
-## Contact
-
-For questions, suggestions, or support, please reach out to [your.email@example.com](mailto:your.email@example.com).
 
 ## Acknowledgements
 
 - **Perplexity**: For providing valuable research tools.
 - **AIDER.chat**: For facilitating rapid development and integration.
 - **OpenAI**: For the GPT models that enhance the SPARC Framework's capabilities.
+- **RA.Aid**: For inspiration and contributions to research assistant capabilities (https://github.com/ai-christianson/RA.Aid).
+- **Playwright**: For robust web automation and scraping capabilities.
+- **Langchain**: For powerful language model tools and chain-of-thought implementations.

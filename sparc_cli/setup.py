@@ -1,4 +1,3 @@
-
 from setuptools import setup, find_packages
 from pathlib import Path
 
@@ -8,7 +7,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='sparc',
-    version='0.84',
+    version='0.86.2',
     packages=find_packages(),
     install_requires=[
         'twine',

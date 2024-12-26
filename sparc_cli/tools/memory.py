@@ -17,17 +17,50 @@ class SnippetInfo(TypedDict):
 
 console = Console()
 
+# Memory configuration
+MEMORY_LIMITS = {
+    'research_notes': 50,  # Max number of research notes
+    'plans': 20,  # Max number of plan steps
+    'tasks': 30,  # Max number of tasks
+    'key_facts': 40,  # Max number of key facts
+    'key_snippets': 30,  # Max number of code snippets
+    'work_log': 100  # Max number of work log entries
+}
+
+class MemoryPriority:
+    LOW = 0
+    MEDIUM = 1
+    HIGH = 2
+    CRITICAL = 3
+
+class MemoryItem(TypedDict):
+    """Base type for memory items with priority"""
+    priority: int
+    timestamp: str
+
+class PrioritizedNote(MemoryItem):
+    """Research note with priority"""
+    content: str
+
+class PrioritizedFact(MemoryItem):
+    """Key fact with priority"""
+    content: str
+
+class PrioritizedSnippet(MemoryItem, SnippetInfo):
+    """Code snippet with priority"""
+    pass
+
 # Global memory store
-_global_memory: Dict[str, Union[List[Any], Dict[int, str], Dict[int, SnippetInfo], int, Set[str], bool, str, int, List[WorkLogEntry]]] = {
-    'research_notes': [],
+_global_memory: Dict[str, Union[List[Any], Dict[int, Union[str, PrioritizedFact, PrioritizedSnippet]], int, Set[str], bool, str, int, List[WorkLogEntry]]] = {
+    'research_notes': [],  # List[PrioritizedNote]
     'plans': [],
     'tasks': {},  # Dict[int, str] - ID to task mapping
     'task_completed': False,  # Flag indicating if task is complete
     'completion_message': '',  # Message explaining completion
     'task_id_counter': 1,  # Counter for generating unique task IDs
-    'key_facts': {},  # Dict[int, str] - ID to fact mapping
+    'key_facts': {},  # Dict[int, PrioritizedFact] - ID to fact mapping
     'key_fact_id_counter': 1,  # Counter for generating unique fact IDs
-    'key_snippets': {},  # Dict[int, SnippetInfo] - ID to snippet mapping
+    'key_snippets': {},  # Dict[int, PrioritizedSnippet] - ID to snippet mapping
     'key_snippet_id_counter': 1,  # Counter for generating unique snippet IDs
     'implementation_requested': False,
     'related_files': {},  # Dict[int, str] - ID to filepath mapping
@@ -37,18 +70,74 @@ _global_memory: Dict[str, Union[List[Any], Dict[int, str], Dict[int, SnippetInfo
     'work_log': []  # List[WorkLogEntry] - Timestamped work events
 }
 
+def _enforce_memory_limit(memory_type: str) -> None:
+    """Enforce memory limits by removing lowest priority, oldest items first."""
+    from datetime import datetime
+    
+    if memory_type not in MEMORY_LIMITS:
+        return
+        
+    limit = MEMORY_LIMITS[memory_type]
+    
+    if memory_type == 'research_notes':
+        notes = _global_memory['research_notes']
+        if len(notes) > limit:
+            # Sort by priority (ascending) then timestamp (ascending)
+            notes.sort(key=lambda x: (x['priority'], x['timestamp']))
+            # Remove oldest, lowest priority items
+            _global_memory['research_notes'] = notes[-limit:]
+            
+    elif memory_type in ['key_facts', 'key_snippets']:
+        items = _global_memory[memory_type]
+        if len(items) > limit:
+            # Sort items by priority and timestamp
+            sorted_items = sorted(
+                items.items(),
+                key=lambda x: (x[1]['priority'], x[1]['timestamp'])
+            )
+            # Keep only the highest priority, newest items
+            items_to_keep = dict(sorted_items[-limit:])
+            _global_memory[memory_type] = items_to_keep
+            
+    elif memory_type == 'work_log':
+        log = _global_memory['work_log']
+        if len(log) > limit:
+            # Keep newest entries
+            _global_memory['work_log'] = log[-limit:]
+
 @tool("emit_research_notes")
-def emit_research_notes(notes: str) -> str:
-    """Store research notes in global memory.
+def emit_research_notes(notes: str, priority: int = MemoryPriority.MEDIUM) -> str:
+    """Store research notes in global memory with priority.
     
     Args:
         notes: The research notes to store
+        priority: Priority level (0-3, default: MEDIUM)
         
     Returns:
         The stored notes
     """
-    _global_memory['research_notes'].append(notes)
-    console.print(Panel(Markdown(notes), title="🔍 Research Notes"))
+    from datetime import datetime
+    
+    note = PrioritizedNote(
+        content=notes,
+        priority=min(max(priority, MemoryPriority.LOW), MemoryPriority.CRITICAL),
+        timestamp=datetime.now().isoformat()
+    )
+    
+    _global_memory['research_notes'].append(note)
+    _enforce_memory_limit('research_notes')
+    
+    priority_labels = {
+        MemoryPriority.LOW: "Low Priority",
+        MemoryPriority.MEDIUM: "Medium Priority", 
+        MemoryPriority.HIGH: "High Priority",
+        MemoryPriority.CRITICAL: "Critical"
+    }
+    
+    console.print(Panel(
+        Markdown(notes),
+        title=f"🔍 Research Notes ({priority_labels[priority]})"
+    ))
     return notes
 
 @tool("emit_plan")
@@ -90,30 +179,51 @@ def emit_task(task: str) -> str:
 
 
 @tool("emit_key_facts")
-def emit_key_facts(facts: List[str]) -> str:
+def emit_key_facts(facts: List[str], priority: int = MemoryPriority.MEDIUM) -> str:
     """Store multiple key facts about the project or current task in global memory.
     
     Args:
         facts: List of key facts to store
+        priority: Priority level (0-3, default: MEDIUM)
         
     Returns:
         List of stored fact confirmation messages
     """
+    from datetime import datetime
+    
     results = []
+    priority = min(max(priority, MemoryPriority.LOW), MemoryPriority.CRITICAL)
+    
     for fact in facts:
         # Get and increment fact ID
         fact_id = _global_memory['key_fact_id_counter']
         _global_memory['key_fact_id_counter'] += 1
         
-        # Store fact with ID
-        _global_memory['key_facts'][fact_id] = fact
+        # Store fact with ID and priority
+        _global_memory['key_facts'][fact_id] = PrioritizedFact(
+            content=fact,
+            priority=priority,
+            timestamp=datetime.now().isoformat()
+        )
         
-        # Display panel with ID
-        console.print(Panel(Markdown(fact), title=f"💡 Key Fact #{fact_id}", border_style="bright_cyan"))
+        # Display panel with ID and priority
+        priority_labels = {
+            MemoryPriority.LOW: "Low Priority",
+            MemoryPriority.MEDIUM: "Medium Priority",
+            MemoryPriority.HIGH: "High Priority",
+            MemoryPriority.CRITICAL: "Critical"
+        }
+        
+        console.print(Panel(
+            Markdown(fact),
+            title=f"💡 Key Fact #{fact_id} ({priority_labels[priority]})",
+            border_style="bright_cyan"
+        ))
         
         # Add result message
         results.append(f"Stored fact #{fact_id}: {fact}")
     
+    _enforce_memory_limit('key_facts')
     log_work_event(f"Stored {len(facts)} key facts.")    
     return "Facts stored."
 
@@ -187,7 +297,7 @@ def request_implementation() -> str:
 
 
 @tool("emit_key_snippets")
-def emit_key_snippets(snippets: List[SnippetInfo]) -> str:
+def emit_key_snippets(snippets: List[SnippetInfo], priority: int = MemoryPriority.MEDIUM) -> str:
     """Store multiple key source code snippets in global memory.
     Automatically adds the filepaths of the snippets to related files.
     
@@ -197,10 +307,14 @@ def emit_key_snippets(snippets: List[SnippetInfo]) -> str:
                  - line_number: Line number where the snippet starts  
                  - snippet: The source code snippet text
                  - description: Optional description of the significance
+        priority: Priority level (0-3, default: MEDIUM)
                  
     Returns:
         List of stored snippet confirmation messages
     """
+    from datetime import datetime
+    
+    priority = min(max(priority, MemoryPriority.LOW), MemoryPriority.CRITICAL)
     # First collect unique filepaths to add as related files
     emit_related_files.invoke({"files": [snippet_info['filepath'] for snippet_info in snippets]})
 
@@ -210,11 +324,25 @@ def emit_key_snippets(snippets: List[SnippetInfo]) -> str:
         snippet_id = _global_memory['key_snippet_id_counter']
         _global_memory['key_snippet_id_counter'] += 1
         
-        # Store snippet info
-        _global_memory['key_snippets'][snippet_id] = snippet_info
+        # Store snippet info with priority
+        prioritized_snippet = PrioritizedSnippet(
+            **snippet_info,
+            priority=priority,
+            timestamp=datetime.now().isoformat()
+        )
+        _global_memory['key_snippets'][snippet_id] = prioritized_snippet
         
         # Format display text as markdown
+        priority_labels = {
+            MemoryPriority.LOW: "Low Priority",
+            MemoryPriority.MEDIUM: "Medium Priority",
+            MemoryPriority.HIGH: "High Priority",
+            MemoryPriority.CRITICAL: "Critical"
+        }
+        
         display_text = [
+            f"**Priority**: {priority_labels[priority]}",
+            "",
             f"**Source Location**:",
             f"- File: `{snippet_info['filepath']}`",
             f"- Line: `{snippet_info['line_number']}`",
@@ -228,12 +356,15 @@ def emit_key_snippets(snippets: List[SnippetInfo]) -> str:
             display_text.extend(["", "**Description**:", snippet_info['description']])
             
         # Display panel
-        console.print(Panel(Markdown("\n".join(display_text)), 
-                          title=f"📝 Key Snippet #{snippet_id}", 
-                          border_style="bright_cyan"))
+        console.print(Panel(
+            Markdown("\n".join(display_text)), 
+            title=f"📝 Key Snippet #{snippet_id}",
+            border_style="bright_cyan"
+        ))
         
         results.append(f"Stored snippet #{snippet_id}")
     
+    _enforce_memory_limit('key_snippets')
     log_work_event(f"Stored {len(snippets)} code snippets.")    
     return "Snippets stored."
 
@@ -414,6 +545,7 @@ def log_work_event(event: str) -> str:
         
     Note:
         Entries can be retrieved with get_work_log() as markdown formatted text.
+        Older entries are automatically removed when limit is reached.
     """
     from datetime import datetime
     entry = WorkLogEntry(
@@ -421,6 +553,7 @@ def log_work_event(event: str) -> str:
         event=event
     )
     _global_memory['work_log'].append(entry)
+    _enforce_memory_limit('work_log')
     return f"Event logged: {event}"
 
 
