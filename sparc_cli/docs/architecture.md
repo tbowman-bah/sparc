@@ -32,6 +32,11 @@
 - File operations
 - Expert knowledge queries
 - Human interaction
+- Web scraping and data extraction
+  - Rate limiting controller
+  - Response cache manager
+  - Error recovery system
+  - Data format handlers
 
 ## Key Modules
 
@@ -72,6 +77,27 @@
 - LLM <-> Tools
 - Config <-> Engine
 - Shell <-> Safety Controls
+- Scraper <-> Cache System
+
+### Scraping Architecture
+
+```
++----------------+     +-------------+     +--------------+
+|  Rate Limiter  |---->| HTTP Client |---->| Cache Layer  |
++----------------+     +-------------+     +--------------+
+        |                    |                   |
+        v                    v                   v
++----------------+     +-------------+     +--------------+
+| Retry Manager  |     | Parser Hub  |     | Error Handler|
++----------------+     +-------------+     +--------------+
+```
+
+The scraping system implements:
+- Distributed rate limiting
+- Intelligent retry backoff
+- Response caching with TTL
+- Format-specific parsing
+- Graceful error recovery
 
 ## Workflow
 
