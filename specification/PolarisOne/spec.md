@@ -1,7 +1,3 @@
-Below is an **updated research paper** that integrates the **PhD Research Council’s** critique and proposals into the **PolarisOne** framework. This document merges theoretical refinements with **PyTorch** and **LangChain** implementation sketches—including specifications, setup steps, and basic unit test outlines. 
-
----
-
 # PolarisOne: A Dynamic, Temperature-Guided Reasoning Framework for Large Language Models (Updated)
 
 ## 1. Introduction
