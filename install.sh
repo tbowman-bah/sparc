@@ -51,10 +51,7 @@ venv() {
 
 deps() {
 
-    # Install aider-chat and sparc-cli in development mode
-    if [[ ! -e .venv/bin/aider ]]
-    then pip install aider-chat
-    fi
+    pip install --requirement requirements-dev.txt
     pip install --editable .
 
     if command -v rg &>/dev/null
