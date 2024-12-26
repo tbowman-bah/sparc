@@ -7,7 +7,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='sparc',
-    version='0.86.2',
+    version='0.86.3',
     packages=find_packages(),
     install_requires=[
         'twine',
@@ -41,4 +41,9 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
     ],
+    entry_points={
+        'console_scripts': [
+            'sparc=sparc_cli.__main__:main',
+        ],
+    },
 )
