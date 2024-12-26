@@ -1,6 +1,8 @@
 import asyncio
 import httpx
 import logging
+import time
+from langchain_core.tools import tool
 from bs4 import BeautifulSoup, Comment
 from dataclasses import dataclass
 from typing import Dict, Optional, Any
@@ -92,7 +94,8 @@ def clean_html_only(html_content: str) -> str:
         logger.error(f"Error cleaning HTML content: {str(e)}")
         return html_content
 
-async def scrape_url_tool(
+@tool("scrape_url")
+def scrape_url_tool(
     url: str,
     use_playwright: bool = False,
     verify_ssl: bool = True,
@@ -168,7 +171,7 @@ async def scrape_url_tool(
             if use_playwright:
                 html_content = scrape_with_playwright()
             else:
-                html_content = await scrape_with_httpx()
+                html_content = asyncio.run(scrape_with_httpx())
             
             # Clean the HTML
             cleaned_html = clean_html_only(html_content)
@@ -198,7 +201,7 @@ async def scrape_url_tool(
             if not strategy.should_retry(attempt, e):
                 break
             attempt += 1
-            await asyncio.sleep(retry_config.base_delay * (2 ** attempt))
+            time.sleep(retry_config.base_delay * (2 ** attempt))
     
     if last_error:
         raise last_error

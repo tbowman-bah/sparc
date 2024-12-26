@@ -8,6 +8,7 @@ from sparc_cli.tools import (
     swap_task_order, monorepo_detected, existing_project_detected, ui_detected,
     task_completed, plan_implementation_completed
 )
+from sparc_cli.tools.scrape import scrape_url_tool
 from sparc_cli.tools.memory import one_shot_completed
 from sparc_cli.tools.agent import request_research, request_implementation, request_research_and_implementation, request_task_implementation
 
@@ -25,7 +26,8 @@ def get_read_only_tools(human_interaction: bool = False) -> list:
         read_file_tool,
         fuzzy_find_project_files,
         ripgrep_search,
-        run_shell_command # can modify files, but we still need it for read-only tasks.
+        run_shell_command, # can modify files, but we still need it for read-only tasks.
+        scrape_url_tool
     ]
     
     if human_interaction:
@@ -119,7 +121,8 @@ def get_chat_tools(expert_enabled: bool = True) -> list:
         emit_key_facts,
         delete_key_facts,
         delete_key_snippets,
-        deregister_related_files
+        deregister_related_files,
+        scrape_url_tool
     ]
 
     return tools
