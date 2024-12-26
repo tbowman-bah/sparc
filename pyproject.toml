@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "sparc-cli"
+name = "sparc"
 dynamic = ["version"]
 description = "SPARC CLI - SPARC Framework Command Line Interface"
 readme = "README.md"
