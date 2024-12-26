@@ -23,6 +23,21 @@ SPARC CLI is a powerful command-line interface that implements the SPARC Framewo
 - Expert knowledge queries
 - Shell command execution
 - Rich console output
+- Web scraping and data extraction
+
+## Web Scraping Features
+
+The CLI includes powerful web scraping capabilities:
+- Configurable rate limiting and request throttling
+- Automatic retry mechanisms
+- Response caching
+- Error handling and recovery
+- Support for multiple data formats (HTML, JSON, XML)
+
+Example usage:
+```bash
+sparc scrape --url "https://example.com" --selector "article.content" --format json
+```
 
 ## Documentation Sections
 

@@ -1,4 +1,5 @@
 from .shell import run_shell_command
+from .scrape import scrape_url_tool
 from .research import monorepo_detected, existing_project_detected, ui_detected
 from .human import ask_human
 from .programmer import run_programming_task
@@ -45,5 +46,6 @@ __all__ = [
     'ui_detected',
     'ask_human',
     'task_completed',
-    'plan_implementation_completed'
+    'plan_implementation_completed',
+    'scrape_url_tool'
 ]
