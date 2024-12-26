@@ -1,3 +1,6 @@
+import os
+import shutil
+import subprocess
 from typing import Dict, Union, Optional, List
 from langchain_core.tools import tool
 from rich.console import Console
@@ -7,6 +10,58 @@ from sparc_cli.proc.interactive import run_interactive_command
 from sparc_cli.text.processing import truncate_output
 
 console = Console()
+
+def install_ripgrep():
+    """Install ripgrep using system package manager."""
+    try:
+        # Try apt-get (Debian/Ubuntu)
+        if shutil.which('apt-get'):
+            subprocess.run(['sudo', 'apt-get', 'update'], check=True)
+            subprocess.run(['sudo', 'apt-get', 'install', '-y', 'ripgrep'], check=True)
+            return True
+        # Try yum (RHEL/CentOS)
+        elif shutil.which('yum'):
+            subprocess.run(['sudo', 'yum', 'install', '-y', 'ripgrep'], check=True)
+            return True
+        # Try brew (macOS)
+        elif shutil.which('brew'):
+            subprocess.run(['brew', 'install', 'ripgrep'], check=True)
+            return True
+        # Try chocolatey (Windows)
+        elif shutil.which('choco'):
+            subprocess.run(['choco', 'install', '-y', 'ripgrep'], check=True)
+            return True
+    except subprocess.CalledProcessError:
+        return False
+    return False
+
+def get_rg_command():
+    """Get the ripgrep command, attempting to install if not found."""
+    # First check if rg is already in PATH
+    system_rg = shutil.which('rg')
+    if system_rg:
+        return system_rg
+    
+    # Try to install ripgrep using system package manager
+    if install_ripgrep():
+        system_rg = shutil.which('rg')
+        if system_rg:
+            return system_rg
+    
+    # If system installation fails, use ripgrepy's binary
+    try:
+        import ripgrepy
+        ripgrepy_dir = os.path.dirname(ripgrepy.__file__)
+        rg_binary = os.path.join(ripgrepy_dir, 'bin', 'rg')
+        
+        # Make binary executable if it's not
+        if not os.access(rg_binary, os.X_OK):
+            os.chmod(rg_binary, 0o755)
+        
+        return rg_binary
+    except ImportError:
+        raise RuntimeError("Could not find or install ripgrep. Please install it manually.")
+
 
 DEFAULT_EXCLUDE_DIRS = [
     '.git',
@@ -51,7 +106,8 @@ def ripgrep_search(
             - success: Boolean indicating if search succeeded
     """
     # Build rg command with options
-    cmd = ['rg', '--color', 'always']
+    rg_path = get_rg_command()
+    cmd = [rg_path, '--color', 'always']
     
     if not case_sensitive:
         cmd.append('-i')

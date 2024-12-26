@@ -38,7 +38,7 @@ def get_read_only_tools(human_interaction: bool = False) -> list:
 # Define constant tool groups
 READ_ONLY_TOOLS = get_read_only_tools()
 MODIFICATION_TOOLS = [run_programming_task]
-COMMON_TOOLS = READ_ONLY_TOOLS + []
+COMMON_TOOLS = READ_ONLY_TOOLS.copy()
 EXPERT_TOOLS = [emit_expert_context, ask_expert]
 RESEARCH_TOOLS = [
     emit_research_notes,
