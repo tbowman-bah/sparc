@@ -7,7 +7,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='sparc',
-    version='0.86.3',
+    version='0.87.6',  # Updated for improved math evaluation
     packages=find_packages(),
     install_requires=[
         'twine',
@@ -23,7 +23,7 @@ setup(
         'playwright',
         'langchain-core',
         'numpy',
-        'sympy',
+        'sympy',  # Required for symbolic math
         'langchain',
     ],
     author='rUv',

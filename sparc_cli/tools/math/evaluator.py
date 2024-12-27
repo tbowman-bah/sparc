@@ -8,12 +8,89 @@ from .models import BenchmarkRequest, BenchmarkResponse
 from .validator import MathValidator
 from pydantic import Field
 
+from typing import Dict, Any, Optional, List, Union
+from sympy import simplify, sympify, solve, factor, expand
+import numpy as np
+
 class SparcBaseTool(BaseTool):
     """Base class for SPARC tools with proper type annotations."""
     name: str = Field(description="The name of the tool")
     description: str = Field(description="The description of the tool")
 
 logger = logging.getLogger(__name__)
+
+class BenchmarkRequest:
+    """Data structure representing a math problem."""
+    def __init__(self, problem_id: str, problem_text: str, expected_type: str, metadata: Optional[Dict[str, Any]] = None):
+        self.problem_id = problem_id
+        self.problem_text = problem_text
+        self.expected_type = expected_type  # 'numerical', 'symbolic', 'matrix'
+        self.metadata = metadata or {}
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "problem_id": self.problem_id,
+            "problem_text": self.problem_text,
+            "expected_type": self.expected_type,
+            "metadata": self.metadata
+        }
+
+class BenchmarkResponse:
+    """Standardized structure for evaluation responses."""
+    def __init__(self, problem_id: str, answer: Any, validation_result: Dict[str, Any], metadata: Optional[Dict[str, Any]] = None):
+        self.problem_id = problem_id
+        self.answer = answer
+        self.validation_result = validation_result
+        self.metadata = metadata or {}
+
+    @property
+    def is_valid(self) -> bool:
+        return self.validation_result.get("status") == "valid"
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "problem_id": self.problem_id,
+            "answer": self.answer,
+            "validation_result": self.validation_result,
+            "metadata": self.metadata
+        }
+
+class MathValidator:
+    """Utility class for validating mathematical results."""
+    
+    @staticmethod
+    def validate_numerical(predicted: Union[str, float], expected: Union[str, float], tolerance: float = 1e-6) -> tuple[bool, str]:
+        """Validate numerical results within tolerance."""
+        try:
+            pred_val = float(predicted)
+            exp_val = float(expected)
+            is_valid = abs(pred_val - exp_val) < tolerance
+            return is_valid, f"Difference: {abs(pred_val - exp_val)}"
+        except (ValueError, TypeError) as e:
+            return False, f"Validation error: {str(e)}"
+
+    @staticmethod
+    def validate_symbolic(predicted: str, expected: str) -> tuple[bool, str]:
+        """Validate symbolic expressions for equivalence."""
+        try:
+            pred_expr = sympify(predicted)
+            exp_expr = sympify(expected)
+            is_valid = bool(simplify(pred_expr - exp_expr) == 0)
+            return is_valid, "Expressions are equivalent" if is_valid else "Expressions differ"
+        except Exception as e:
+            return False, f"Symbolic validation error: {str(e)}"
+
+    @staticmethod
+    def validate_matrix(predicted: Union[List[List[float]], np.ndarray], 
+                       expected: Union[List[List[float]], np.ndarray]) -> tuple[bool, str]:
+        """Validate matrix results."""
+        try:
+            pred_arr = np.array(predicted, dtype=float)
+            exp_arr = np.array(expected, dtype=float)
+            is_valid = np.allclose(pred_arr, exp_arr)
+            return is_valid, "Matrices match" if is_valid else "Matrices differ"
+        except Exception as e:
+            return False, f"Matrix validation error: {str(e)}"
 
 class MathBenchmarkEvaluator(ABC):
     """Base class for math benchmark evaluation."""
@@ -197,43 +274,53 @@ class CalculatorTool(SparcBaseTool):
             Calculated result as a string
         """
         try:
-            # Create a safe dictionary with basic math operations
-            safe_dict = {
-                'abs': abs,
-                'float': float,
-                'int': int,
-                'pow': pow,
-                'round': round,
-                '+': lambda x, y: x + y,
-                '-': lambda x, y: x - y,
-                '*': lambda x, y: x * y,
-                '/': lambda x, y: x / y,
-                '**': pow
-            }
-            
-            # Parse the expression to handle quadratic equations
+            # Check if it's a quadratic equation
             if "=" in expression and ("x^2" in expression or "x²" in expression):
-                # For equations like "x^2 + 5x + 6 = 0"
-                left_side = expression.split('=')[0].strip()
-                # Extract coefficients
-                left_side = left_side.replace("²", "^2")  # normalize notation
-                terms = left_side.replace(" ", "").replace("-", "+-").split("+")
+                # Extract the left side of the equation (assume right side is 0)
+                left_side = expression.split("=")[0].strip()
                 
+                # Normalize the expression
+                expr = left_side.replace("²", "^2")  # standardize squared notation
+                expr = expr.replace(" ", "")  # remove spaces
+                
+                # Initialize coefficients
                 a = b = c = 0
-                for term in terms:
-                    if not term: continue
-                    if "x^2" in term:
-                        a = -1 if term.startswith("-") else 1
-                        if term.replace("-", "").replace("x^2", ""):
-                            a *= float(term.replace("-", "").replace("x^2", ""))
-                    elif "x" in term:
-                        b = -1 if term.startswith("-") else 1
-                        if term.replace("-", "").replace("x", ""):
-                            b *= float(term.replace("-", "").replace("x", ""))
-                    else:
-                        c = float(term)
                 
-                # Use quadratic formula: (-b ± √(b² - 4ac)) / (2a)
+                # Split into terms and normalize
+                expr = expr.replace("-", "+-").strip("+")  # Handle negative terms
+                terms = expr.split("+")
+                
+                # Process each term
+                for term in terms:
+                    if not term:  # Skip empty terms
+                        continue
+                    term = term.strip()
+                    
+                    # Handle x^2 terms
+                    if "x^2" in term:
+                        coef = term.replace("x^2", "").strip()
+                        if not coef:
+                            a += 1
+                        elif coef == "-":
+                            a -= 1
+                        else:
+                            a += float(coef)
+                    
+                    # Handle x terms
+                    elif "x" in term:
+                        coef = term.replace("x", "").strip()
+                        if not coef:
+                            b += 1
+                        elif coef == "-":
+                            b -= 1
+                        else:
+                            b += float(coef)
+                    
+                    # Handle constant terms
+                    else:
+                        c += float(term)
+                
+                # Calculate using quadratic formula
                 discriminant = b**2 - 4*a*c
                 if discriminant < 0:
                     return "No real solutions"
@@ -241,17 +328,29 @@ class CalculatorTool(SparcBaseTool):
                 x1 = (-b + (discriminant ** 0.5)) / (2*a)
                 x2 = (-b - (discriminant ** 0.5)) / (2*a)
                 
-                # Format the solutions nicely
+                # Format solutions
                 solutions = []
                 for x in sorted([x1, x2]):
-                    if x == int(x):
-                        solutions.append(str(int(x)))
+                    if abs(x - round(x)) < 1e-10:  # if very close to an integer
+                        solutions.append(str(int(round(x))))
                     else:
                         solutions.append(f"{x:.2f}")
                 
                 return f"x = {' or x = '.join(solutions)}"
             else:
-                # For regular calculations
+                # Handle regular calculations
+                safe_dict = {
+                    'abs': abs,
+                    'float': float,
+                    'int': int,
+                    'pow': pow,
+                    'round': round,
+                    '+': lambda x, y: x + y,
+                    '-': lambda x, y: x - y,
+                    '*': lambda x, y: x * y,
+                    '/': lambda x, y: x / y,
+                    '**': pow
+                }
                 result = eval(expression, {"__builtins__": None}, safe_dict)
                 if isinstance(result, (int, float)):
                     return str(result if result == int(result) else f"{result:.2f}")
@@ -275,7 +374,66 @@ class SymbolicSolverTool(SparcBaseTool):
             Simplified symbolic expression
         """
         try:
-            # Placeholder for symbolic manipulation logic
-            return expression
+                # Parse the expression and identify operation type
+            if "=" in expression:
+                # Handle equations
+                left_side, right_side = [s.strip() for s in expression.split("=")]
+                # Convert to sympy expressions
+                left_expr = sympify(left_side)
+                right_expr = sympify(right_side)
+                # Move everything to left side
+                expr = left_expr - right_expr
+                
+                # Get variables in the expression
+                variables = list(expr.free_symbols)
+                if not variables:
+                    return str(expr)
+                
+                # Solve for the variable
+                try:
+                    solutions = solve(expr, variables[0])
+                    if solutions:
+                        return f"{variables[0]} = {' or '.join(str(sol) for sol in solutions)}"
+                    return "No solutions found"
+                except Exception as e:
+                    # Fall back to quadratic formula for quadratic equations
+                    if str(variables[0]) + "**2" in str(expr):
+                        # Extract coefficients
+                        x = variables[0]
+                        expanded = expand(expr)
+                        a = expanded.coeff(x, 2)
+                        b = expanded.coeff(x, 1)
+                        c = expanded.coeff(x, 0)
+                        
+                        # Use quadratic formula
+                        discriminant = b**2 - 4*a*c
+                        if discriminant < 0:
+                            return "No real solutions"
+                        
+                        x1 = (-b + (discriminant ** 0.5)) / (2*a)
+                        x2 = (-b - (discriminant ** 0.5)) / (2*a)
+                        
+                        return f"x = {x1} or x = {x2}"
+                    raise ValueError(f"Could not solve equation: {str(e)}")
+            
+            else:
+                # Handle expressions (simplification, factoring, etc.)
+                sympy_expr = sympify(expression)
+                
+                # Try different forms and return the most compact
+                simplified = simplify(sympy_expr)
+                factored = factor(sympy_expr)
+                expanded = expand(sympy_expr)
+                
+                # Choose the shortest representation
+                forms = {
+                    'simplified': str(simplified),
+                    'factored': str(factored),
+                    'expanded': str(expanded)
+                }
+                
+                shortest = min(forms.items(), key=lambda x: len(x[1]))
+                return shortest[1]
+                
         except Exception as e:
             raise ValueError(f"Symbolic solving failed: {str(e)}")
