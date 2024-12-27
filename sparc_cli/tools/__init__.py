@@ -1,6 +1,10 @@
 from .shell import run_shell_command
 from .scrape import scrape_url_tool
 from .research import monorepo_detected, existing_project_detected, ui_detected
+from .math.models import BenchmarkRequest, BenchmarkResponse
+from .math.validator import MathValidator
+from .math.evaluator import MathBenchmarkEvaluator
+from .math.agent import MathAgent
 from .human import ask_human
 from .programmer import run_programming_task
 from .expert import ask_expert, emit_expert_context
@@ -19,6 +23,8 @@ from .memory import (
 
 __all__ = [
     'ask_expert',
+    'BenchmarkRequest',
+    'BenchmarkResponse',
     'delete_key_facts',
     'delete_key_snippets',
     'deregister_related_files',
@@ -47,5 +53,8 @@ __all__ = [
     'ask_human',
     'task_completed',
     'plan_implementation_completed',
-    'scrape_url_tool'
+    'scrape_url_tool',
+    'MathAgent',
+    'MathBenchmarkEvaluator',
+    'MathValidator'
 ]

@@ -316,10 +316,29 @@ def run_agent_with_retry(agent, prompt: str, config: dict) -> Optional[str]:
                     for chunk in agent.stream({"messages": [HumanMessage(content=prompt)]}, config):
                         check_interrupt()
                         print_agent_output(chunk)
-                    return "Agent run completed successfully"
+                    if not config.get('chat_mode'):
+                        return "Agent run completed successfully"
+                    return None
                 except KeyboardInterrupt:
                     raise
                 except (InternalServerError, APITimeoutError, RateLimitError, APIError) as e:
+                    error_str = str(e).lower()
+                    if 'prompt is too long' in error_str or 'token limit exceeded' in error_str:
+                        # Extract current and max tokens from error message
+                        import re
+                        match = re.search(r'(\d+)\s*tokens?\s*>\s*(\d+)\s*maximum', error_str)
+                        if match:
+                            current_tokens = int(match.group(1))
+                            max_tokens = int(match.group(2))
+                            # Calculate reduction ratio to get under limit with 10% buffer
+                            reduction_ratio = (max_tokens * 0.9) / current_tokens
+                            # Truncate prompt
+                            words = prompt.split()
+                            new_length = int(len(words) * reduction_ratio)
+                            prompt = ' '.join(words[:new_length])
+                            print_error(f"Prompt truncated to fit within token limit. Continuing with shortened prompt...")
+                            continue
+
                     if attempt == max_retries - 1:
                         raise RuntimeError(f"Max retries ({max_retries}) exceeded. Last error: {e}")
                     delay = base_delay * (2 ** attempt)
