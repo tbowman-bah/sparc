@@ -8,6 +8,7 @@ from sparc_cli.tools import (
     swap_task_order, monorepo_detected, existing_project_detected, ui_detected,
     task_completed, plan_implementation_completed
 )
+from sparc_cli.tools.math.evaluator import CalculatorTool, SymbolicSolverTool
 from sparc_cli.tools.scrape import scrape_url_tool
 from sparc_cli.tools.memory import one_shot_completed
 from sparc_cli.tools.agent import request_research, request_implementation, request_research_and_implementation, request_task_implementation
@@ -122,7 +123,9 @@ def get_chat_tools(expert_enabled: bool = True) -> list:
         delete_key_facts,
         delete_key_snippets,
         deregister_related_files,
-        scrape_url_tool
+        scrape_url_tool,
+        CalculatorTool(),
+        SymbolicSolverTool()
     ]
 
     return tools
