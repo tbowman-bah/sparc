@@ -178,9 +178,15 @@ def main():
             _global_memory['config']['expert_provider'] = args.expert_provider
             _global_memory['config']['expert_model'] = args.expert_model
             
-            # Run chat agent and exit
-            run_agent_with_retry(chat_agent, CHAT_PROMPT.format(initial_request=initial_request), config)
-            return
+            # Run chat agent in a loop
+            while True:
+                try:
+                    run_agent_with_retry(chat_agent, CHAT_PROMPT.format(initial_request=initial_request), config)
+                    # Get next request from user
+                    initial_request = ask_human.invoke({"question": "What else would you like help with?"})
+                except KeyboardInterrupt:
+                    print_interrupt("Chat session ended by user")
+                    return
             
         base_task = args.message
         config = {
