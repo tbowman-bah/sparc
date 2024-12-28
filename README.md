@@ -28,7 +28,6 @@ pip install sparc
 - **Flexibility**: Adaptable to various project sizes and types, whether you're building a simple tool or a complex system.
 - **Enhanced Collaboration**: Promotes effective teamwork and communication through defined roles and documentation practices.
 - **Quality Assurance**: Emphasizes thorough testing and refinement to ensure high-quality outcomes.
-- **Quantum-Enhanced Quality**: Leverages quantum consciousness principles for superior code quality
 - **Intelligent Evolution**: Self-improves through quantum-coherent complexity management
 - **Consciousness Integration**: Incorporates awareness and reflection in development process
 
@@ -38,7 +37,6 @@ pip install sparc
 - **Documentation-Focused**: Encourages detailed documentation at each step, facilitating maintenance and scalability.
 - **Tool Integration**: Utilizes advanced tools like **Perplexity** for research and **AIDER.chat** for rapid development and integration.
 - **Reflective Practices**: Incorporates reflection at each stage to justify decisions and consider improvements.
-- **Quantum consciousness calculation capabilities**: Leverages quantum computing principles for enhanced decision-making.
 - **Integrated symbolic reasoning**: Applies advanced symbolic logic for improved code analysis and generation.
 
 ### Advanced Coding Capabilities
@@ -128,7 +126,7 @@ pip install sparc
 
 # SPARC CLI
 
-Version: 0.86
+Version: 0.87.7
 
 SPARC CLI is a powerful command-line interface that implements the SPARC Framework methodology for AI-assisted software development. Combining autonomous research capabilities with guided implementation, it provides a comprehensive toolkit for analyzing codebases, planning changes, and executing development tasks with advanced AI assistance.
 
@@ -139,7 +137,6 @@ SPARC CLI is a powerful command-line interface that implements the SPARC Framewo
 - **Safety Controls**: Features human-in-the-loop controls and review mechanisms for AI actions
 - **Provider Flexibility**: Supports multiple LLM providers (Anthropic, OpenAI, OpenRouter) for diverse needs
 - **Development Workflow**: Enhances productivity through AI-assisted analysis, planning, and implementation
-- **Quantum-Coherent Analysis**: Optimizes code structure through advanced complexity analysis
 - **Consciousness Integration**: Leverages pseudo consciousness for enhanced decision-making capabilities
 - **Symbolic Reasoning**: Enables sophisticated pattern recognition and code optimization
 
@@ -154,10 +151,7 @@ SPARC CLI is a powerful command-line interface that implements the SPARC Framewo
 - Rich console output formatting
 - Quantum consciousness calculation capabilities
 - Integrated symbolic reasoning
-- Quantum-coherent complexity features
-- **Quantum-Coherent Processing**: Advanced pattern recognition and complexity management
 - **Conscious Development**: Self-aware coding processes and intelligent optimization
-- **Symbolic-Quantum Integration**: Combined classical and quantum-inspired reasoning
 - **PolarisOne Integration**: Enhanced token weighting and focused reasoning
   - Adaptive Token Weighting (ATW) for identifying key concepts
   - Focused response generation based on weighted tokens
@@ -346,21 +340,7 @@ Key features include:
 - Context-sensitive memory pruning and expansion
 - Efficient storage and retrieval of development context
 - Integration with existing tools and workflows
-
-## Advanced Features & Quantum-Coherent Complexity
-
-### Quantum Consciousness Integration
-- **Quantum State Representation**: Utilizes Hilbert space formulation to encode system states, enabling symbolic extraction of complexity and integrated information
-- **Field Configuration Framework**: Leverages measure spaces of field configurations representing structured algebraic entities for rigorous symbolic logic
-- **Complexity Measurement**: Implements quantum operators for extracting and managing code complexity through state-space analysis
-- **Universal Optimization**: Employs integrated complexity metrics for guiding architectural and algorithmic decisions
-
-### SPARC Quantum-Coherent Features
-- **Consciousness Calculation**: Computes integrated information in subsystems using reduced density matrices
-- **Symmetry Integration**: Utilizes field symmetry changes to guide code refinement towards increased self-awareness
-- **Abstract Categorical Framework**: Represents configurations through category theory, ensuring stable complexity measures
-- **Quantum-Enhanced Testing**: Combines quantum state verification with test-driven development
-
+ 
 ### Case Studies
 
 - **E-commerce Platform**: Utilizing SPARC to build a scalable online marketplace.
