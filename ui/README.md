@@ -25,24 +25,56 @@ yarn add @ruv/sparc-ui
 pnpm add @ruv/sparc-ui
 ```
 
-### Basic Usage
 
-```tsx
-import { ChatInput, Preview } from '@ruv/sparc-ui';
+## Environment Setup
 
-function App() {
-  return (
-    <div>
-      <ChatInput 
-        provider="anthropic"
-        model="claude-3-opus-20240229"
-        onResponse={(response) => console.log(response)}
-      />
-      <Preview mode="code" content={response} />
-    </div>
-  );
-}
+### Core Requirements
+
+```bash
+# E2B API Key (Required) - Get your key at https://e2b.dev/
+E2B_API_KEY="your-e2b-api-key"
+
+# At least one AI provider API key is required
+OPENAI_API_KEY="your-openai-key"
+ANTHROPIC_API_KEY="your-anthropic-key"
+
+# Additional Provider Options
+GROQ_API_KEY="your-groq-key"
+FIREWORKS_API_KEY="your-fireworks-key"
+TOGETHER_API_KEY="your-together-key"
+GOOGLE_AI_API_KEY="your-google-ai-key"
+GOOGLE_VERTEX_CREDENTIALS="your-vertex-credentials"
+MISTRAL_API_KEY="your-mistral-key"
+XAI_API_KEY="your-xai-key"
 ```
+
+### Optional Features
+
+```bash
+# Site Configuration
+NEXT_PUBLIC_SITE_URL="your-site-url"
+
+# UI Configuration
+NEXT_PUBLIC_NO_API_KEY_INPUT="true"
+NEXT_PUBLIC_NO_BASE_URL_INPUT="true"
+
+# Rate Limiting
+RATE_LIMIT_MAX_REQUESTS="100"
+RATE_LIMIT_WINDOW="60"
+
+# Vercel/Upstash KV (for short URLs and rate limiting)
+KV_REST_API_URL="your-kv-api-url"
+KV_REST_API_TOKEN="your-kv-api-token"
+
+# Supabase Authentication
+SUPABASE_URL="your-supabase-url"
+SUPABASE_ANON_KEY="your-supabase-anon-key"
+
+# PostHog Analytics
+NEXT_PUBLIC_POSTHOG_KEY="your-posthog-key"
+NEXT_PUBLIC_POSTHOG_HOST="your-posthog-host"
+```
+
 
 ## Core Features
 
@@ -80,28 +112,42 @@ The framework provides seamless integration with multiple AI providers:
 
 ### Code Execution Environment
 
-Secure, sandboxed code execution powered by E2B:
+Secure, sandboxed code execution powered by E2B with support for multiple development environments:
+
+#### Available Templates
+
+- **Gradio Developer**: Build ML/AI interfaces with Gradio (Port: 7860)
+- **Next.js Developer**: Create React applications with Next.js (Port: 3000)
+- **Streamlit Developer**: Develop data apps with Streamlit (Port: 8501)
+- **Vue Developer**: Build Vue/Nuxt applications (Port: 3000)
 
 ```tsx
+// Example: Using a sandbox template
 <Preview
   mode="code"
-  enableE2B={true}
-  runtimes={['python', 'nodejs', 'java']}
+  template="gradio-developer"  // Specify the template
+  code={[{
+    file_path: "app.py",
+    file_content: `
+import gradio as gr
+def greet(name): return f"Hello {name}!"
+demo = gr.Interface(fn=greet, inputs="text", outputs="text")
+demo.launch()
+    `
+  }]}
+  port={7860}  // Template-specific port
   onExecute={async (result) => {
-    const { output, error } = result;
+    const { url, error } = result;
     if (error) {
       console.error('Execution failed:', error);
     } else {
-      console.log('Output:', output);
+      console.log('App running at:', url);
     }
-  }}
-  securityOptions={{
-    allowedModules: ['numpy', 'pandas'],
-    timeoutMs: 5000,
-    memoryLimitMb: 512
   }}
 />
 ```
+
+For detailed template documentation and implementation guides, see [sandbox-templates/README.md](sandbox-templates/README.md).
 
 ### Advanced Component Customization
 
@@ -251,55 +297,6 @@ import { CollaborativeEditor } from '@ruv/sparc-ui';
     provider: 'local-storage'
   }}
 />
-```
-
-## Environment Setup
-
-### Core Requirements
-
-```bash
-# E2B API Key (Required) - Get your key at https://e2b.dev/
-E2B_API_KEY="your-e2b-api-key"
-
-# At least one AI provider API key is required
-OPENAI_API_KEY="your-openai-key"
-ANTHROPIC_API_KEY="your-anthropic-key"
-
-# Additional Provider Options
-GROQ_API_KEY="your-groq-key"
-FIREWORKS_API_KEY="your-fireworks-key"
-TOGETHER_API_KEY="your-together-key"
-GOOGLE_AI_API_KEY="your-google-ai-key"
-GOOGLE_VERTEX_CREDENTIALS="your-vertex-credentials"
-MISTRAL_API_KEY="your-mistral-key"
-XAI_API_KEY="your-xai-key"
-```
-
-### Optional Features
-
-```bash
-# Site Configuration
-NEXT_PUBLIC_SITE_URL="your-site-url"
-
-# UI Configuration
-NEXT_PUBLIC_NO_API_KEY_INPUT="true"
-NEXT_PUBLIC_NO_BASE_URL_INPUT="true"
-
-# Rate Limiting
-RATE_LIMIT_MAX_REQUESTS="100"
-RATE_LIMIT_WINDOW="60"
-
-# Vercel/Upstash KV (for short URLs and rate limiting)
-KV_REST_API_URL="your-kv-api-url"
-KV_REST_API_TOKEN="your-kv-api-token"
-
-# Supabase Authentication
-SUPABASE_URL="your-supabase-url"
-SUPABASE_ANON_KEY="your-supabase-anon-key"
-
-# PostHog Analytics
-NEXT_PUBLIC_POSTHOG_KEY="your-posthog-key"
-NEXT_PUBLIC_POSTHOG_HOST="your-posthog-host"
 ```
 
 ## Performance Optimization
