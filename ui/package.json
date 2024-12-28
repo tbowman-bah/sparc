@@ -1,12 +1,26 @@
 {
-  "name": "sparc",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@ruv/sparc-ui",
+  "version": "0.1.2",
+  "description": "SPARC (Specification, Pseudocode, Architecture, Refinement, and Completion) Framework UI Components",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "next dev --turbo",
-    "build": "next build",
+    "build": "tsc -p tsconfig.build.json",
     "start": "next start",
     "lint": "next lint"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^0.0.23",
@@ -15,6 +29,7 @@
     "@ai-sdk/mistral": "^1.0.1",
     "@ai-sdk/openai": "^0.0.59",
     "@e2b/code-interpreter": "^1.0.2",
+    "@google-cloud/vertexai": "^1.9.2",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
@@ -42,8 +57,8 @@
     "ollama-ai-provider": "^0.12.0",
     "posthog-js": "^1.158.3",
     "prismjs": "^1.29.0",
-    "react": "^18",
-    "react-dom": "^18",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "react-textarea-autosize": "^8.5.3",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
@@ -56,6 +71,8 @@
     "@types/prismjs": "^1.26.4",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@typescript-eslint/eslint-plugin": "^8.18.2",
+    "@typescript-eslint/parser": "^8.18.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "postcss": "^8",
