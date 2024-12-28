@@ -188,3 +188,4 @@ coverage/
 # Temporary files
 tmp/
 temp/
+.npmrc
