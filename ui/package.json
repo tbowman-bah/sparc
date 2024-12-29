@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "@ruv/sparc-ui",
   "version": "0.1.4",
   "description": "SPARC (Specification, Pseudocode, Architecture, Refinement, and Completion) Framework UI Components",
@@ -30,6 +31,9 @@
     "@ai-sdk/openai": "^0.0.59",
     "@e2b/code-interpreter": "^1.0.2",
     "@google-cloud/vertexai": "^1.9.2",
+    "@langchain/anthropic": "^0.3.11",
+    "@langchain/core": "^0.3.26",
+    "@langchain/langgraph": "^0.2.36",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
@@ -77,6 +81,7 @@
     "eslint-config-next": "14.2.4",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
   }
 }
