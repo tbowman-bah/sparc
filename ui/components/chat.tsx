@@ -2,7 +2,7 @@ import { Message } from '@/lib/messages'
 import { FragmentSchema } from '@/lib/schema'
 import { ExecutionResult } from '@/lib/types'
 import { DeepPartial } from 'ai'
-import { Loader2Icon, LoaderIcon, Terminal } from 'lucide-react'
+import { Loader2Icon, LoaderIcon, Terminal, Search, BookOpen, Database, LineChart, Lightbulb } from 'lucide-react'
 import { useEffect } from 'react'
 
 export function Chat({
@@ -36,7 +36,20 @@ export function Chat({
         >
           {message.content.map((content, id) => {
             if (content.type === 'text') {
-              return content.text
+              return (
+                <div className="flex items-center gap-2">
+                  {content.icon && (
+                    <div className="w-5 h-5 flex items-center justify-center">
+                      {content.icon === 'Search' && <Search className="w-4 h-4" />}
+                      {content.icon === 'BookOpen' && <BookOpen className="w-4 h-4" />}
+                      {content.icon === 'Database' && <Database className="w-4 h-4" />}
+                      {content.icon === 'LineChart' && <LineChart className="w-4 h-4" />}
+                      {content.icon === 'Lightbulb' && <Lightbulb className="w-4 h-4" />}
+                    </div>
+                  )}
+                  <span>{content.text}</span>
+                </div>
+              )
             }
             if (content.type === 'image') {
               return (

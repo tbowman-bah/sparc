@@ -197,10 +197,13 @@ export default function Home() {
 
     // Check for commands first
     if (chatInput.startsWith('/')) {
-    const isCommand = await handleCommand(
+      // Clear input immediately for all commands
+      setChatInput('');
+      setFiles([]);
+      
+      const isCommand = await handleCommand(
       chatInput,
       (params) => {
-        // For commands, only update messages without submitting to chat API
         if (params.messages) {
           const newMessages = params.messages.map(msg => {
             const content = msg.content.map(c => {
@@ -227,11 +230,6 @@ export default function Home() {
           });
           setMessages(prev => [...prev, ...newMessages]);
         }
-        // Clear input if specified
-        if (params.clearInput) {
-          setChatInput('');
-          setFiles([]);
-        }
       },
         {
           userID: session?.user?.id,
@@ -240,7 +238,17 @@ export default function Home() {
           config: {
             ...languageModel,
             skipAI: true // Signal to skip AI processing
-          }
+          },
+          messages: messages.map(msg => ({
+            role: msg.role,
+            content: msg.content.filter(c => 'text' in c).map(c => ({
+              type: c.type,
+              text: 'text' in c ? c.text || '' : '',
+              icon: 'icon' in c ? c.icon : undefined
+            })),
+            loading: false,
+            streaming: false
+          }))
         }
       );
       if (isCommand) {
@@ -256,7 +264,7 @@ export default function Home() {
 
     if (images.length > 0) {
       images.forEach((image) => {
-        content.push({ type: 'image', image })
+        content.push({ type: 'image', image: image.image })
       })
     }
 
