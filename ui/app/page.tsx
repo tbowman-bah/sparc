@@ -1,20 +1,22 @@
-'use client'
+'use client';
 
-import { AuthDialog } from '@/components/auth-dialog'
-import { Chat } from '@/components/chat'
-import { ChatInput } from '@/components/chat-input'
-import { ChatPicker } from '@/components/chat-picker'
-import { ChatSettings } from '@/components/chat-settings'
-import { NavBar } from '@/components/navbar'
-import { Preview } from '@/components/preview'
-import { AuthViewType, useAuth } from '@/lib/auth'
-import { Message, toAISDKMessages, toMessageImage } from '@/lib/messages'
-import { LLMModelConfig } from '@/lib/models'
-import modelsList from '@/lib/models.json'
-import { FragmentSchema, fragmentSchema as schema } from '@/lib/schema'
-import { supabase } from '@/lib/supabase'
-import templates, { TemplateId } from '@/lib/templates'
-import { ExecutionResult } from '@/lib/types'
+import { AuthDialog } from '../components/auth-dialog'
+import { Chat } from '../components/chat'
+import { ChatInput } from '../components/chat-input'
+import { ChatPicker } from '../components/chat-picker'
+import { ChatSettings } from '../components/chat-settings'
+import { CommandPicker } from '../components/command-picker'
+import { NavBar } from '../components/navbar'
+import { Preview } from '../components/preview'
+import { AuthViewType, useAuth } from '../lib/auth'
+import { Message, MessageText, MessageCode, MessageImage, toAISDKMessages, toMessageImage } from '../lib/messages'
+import { LLMModelConfig } from '../lib/models'
+import modelsList from '../lib/models.json'
+import { FragmentSchema, fragmentSchema as schema } from '../lib/schema'
+import { supabase } from '../lib/supabase'
+import templates, { TemplateId } from '../lib/templates'
+import { ExecutionResult } from '../lib/types'
+import { handleCommand } from '../lib/commands'
 import { DeepPartial } from 'ai'
 import { experimental_useObject as useObject } from 'ai/react'
 import { usePostHog } from 'posthog-js/react'
@@ -22,17 +24,39 @@ import { SetStateAction, useEffect, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 
 export default function Home() {
+  // Helper functions defined at the top
+  const setCurrentPreview = (preview: {
+    fragment: DeepPartial<FragmentSchema> | undefined
+    result: ExecutionResult | undefined
+  }) => {
+    setFragment(preview.fragment)
+    setResult(preview.result)
+  }
+
+  const addMessage = (message: Message) => {
+    const newMessages = [...messages, message]
+    setMessages(newMessages)
+    return newMessages
+  }
+
+  const setMessage = (message: Partial<Message>, index?: number) => {
+    setMessages((previousMessages) => {
+      const updatedMessages = [...previousMessages]
+      updatedMessages[index ?? previousMessages.length - 1] = {
+        ...previousMessages[index ?? previousMessages.length - 1],
+        ...message,
+      }
+      return updatedMessages
+    })
+  }
+
+  // State declarations
   const [chatInput, setChatInput] = useLocalStorage('chat', '')
   const [files, setFiles] = useState<File[]>([])
-  const [selectedTemplate, setSelectedTemplate] = useState<'auto' | TemplateId>(
-    'auto',
-  )
-  const [languageModel, setLanguageModel] = useLocalStorage<LLMModelConfig>(
-    'languageModel',
-    {
-      model: 'claude-3-5-sonnet-latest',
-    },
-  )
+  const [selectedTemplate, setSelectedTemplate] = useState<'auto' | TemplateId>('auto')
+  const [languageModel, setLanguageModel] = useLocalStorage<LLMModelConfig>('languageModel', {
+    model: 'claude-3-5-sonnet-latest',
+  })
 
   const posthog = usePostHog()
 
@@ -56,12 +80,10 @@ export default function Home() {
   const lastMessage = messages[messages.length - 1]
 
   const { object, submit, isLoading, stop, error } = useObject({
-    api:
-      currentModel?.id === 'o1-preview' || currentModel?.id === 'o1-mini'
-        ? '/api/chat-o1'
-        : '/api/chat',
+    api: currentModel?.id === 'o1-preview' || currentModel?.id === 'o1-mini'
+      ? '/api/chat-o1'
+      : '/api/chat',
     schema,
-    experimental_streamData: true,
     onError: (error) => {
       if (error.message.includes('request limit')) {
         setIsRateLimited(true)
@@ -69,7 +91,6 @@ export default function Home() {
     },
     onFinish: async ({ object: fragment, error }) => {
       if (!error) {
-        // send it to /api/sandbox
         console.log('fragment', fragment)
         setIsPreviewLoading(true)
         posthog.capture('fragment_generated', {
@@ -79,7 +100,6 @@ export default function Home() {
         try {
           if (!fragment) return;
 
-          // Show code immediately
           setFragment(fragment)
           setCurrentPreview({ fragment, result: undefined })
           
@@ -121,7 +141,6 @@ export default function Home() {
           setCurrentTab('fragment')
         } catch (err) {
           console.error('Sandbox error:', err)
-          // Keep showing the code even if sandbox fails
         } finally {
           setIsPreviewLoading(false)
         }
@@ -165,19 +184,7 @@ export default function Home() {
     if (error) stop()
   }, [error])
 
-  function setMessage(message: Partial<Message>, index?: number) {
-    setMessages((previousMessages) => {
-      const updatedMessages = [...previousMessages]
-      updatedMessages[index ?? previousMessages.length - 1] = {
-        ...previousMessages[index ?? previousMessages.length - 1],
-        ...message,
-      }
-
-      return updatedMessages
-    })
-  }
-
-  async function handleSubmitAuth(e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmitAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!session) {
@@ -188,6 +195,57 @@ export default function Home() {
       stop()
     }
 
+    // Check for commands first
+    if (chatInput.startsWith('/')) {
+      const isCommand = await handleCommand(
+        chatInput,
+        (params) => {
+          // For commands, only update messages without submitting to chat API
+          if (params.messages) {
+            const newMessages = params.messages.map(msg => {
+              const content = msg.content.map(c => {
+                if ('type' in c) {
+                  switch (c.type) {
+                    case 'text':
+                      return { type: 'text', text: c.text } as MessageText;
+                    case 'code':
+                      return { type: 'code', text: c.text } as MessageCode;
+                    case 'image':
+                      if ('image' in c) {
+                        return { type: 'image', image: c.image } as MessageImage;
+                      }
+                      break;
+                  }
+                }
+                return null;
+              }).filter((c): c is MessageText | MessageCode | MessageImage => c !== null);
+              
+              return {
+                role: msg.role as Message['role'],
+                content
+              } as Message;
+            });
+            setMessages(prev => [...prev, ...newMessages]);
+          }
+        },
+        {
+          userID: session?.user?.id,
+          template: currentTemplate,
+          model: currentModel,
+          config: {
+            ...languageModel,
+            skipAI: true // Signal to skip AI processing
+          }
+        }
+      );
+      if (isCommand) {
+        setChatInput('');
+        setFiles([]);
+        return;
+      }
+    }
+
+    // Handle regular chat messages
     const content: Message['content'] = [{ type: 'text', text: chatInput }]
     const images = await toMessageImage(files)
 
@@ -220,7 +278,7 @@ export default function Home() {
     })
   }
 
-  function retry() {
+  const retry = () => {
     submit({
       userID: session?.user?.id,
       messages: toAISDKMessages(messages),
@@ -230,30 +288,25 @@ export default function Home() {
     })
   }
 
-  function addMessage(message: Message) {
-    setMessages((previousMessages) => [...previousMessages, message])
-    return [...messages, message]
-  }
-
-  function handleSaveInputChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+  const handleSaveInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setChatInput(e.target.value)
   }
 
-  function handleFileChange(change: SetStateAction<File[]>) {
+  const handleFileChange = (change: SetStateAction<File[]>) => {
     setFiles(change)
   }
 
-  function logout() {
+  const logout = () => {
     supabase
       ? supabase.auth.signOut()
       : console.warn('Supabase is not initialized')
   }
 
-  function handleLanguageModelChange(e: LLMModelConfig) {
+  const handleLanguageModelChange = (e: LLMModelConfig) => {
     setLanguageModel({ ...languageModel, ...e })
   }
 
-  function handleSocialClick(target: 'github' | 'x' | 'discord') {
+  const handleSocialClick = (target: 'github' | 'x' | 'discord') => {
     if (target === 'github') {
       window.open('https://github.com/e2b-dev/fragments', '_blank')
     } else if (target === 'x') {
@@ -265,7 +318,7 @@ export default function Home() {
     posthog.capture(`${target}_click`)
   }
 
-  function handleClearChat() {
+  const handleClearChat = () => {
     stop()
     setChatInput('')
     setFiles([])
@@ -276,15 +329,7 @@ export default function Home() {
     setIsPreviewLoading(false)
   }
 
-  function setCurrentPreview(preview: {
-    fragment: DeepPartial<FragmentSchema> | undefined
-    result: ExecutionResult | undefined
-  }) {
-    setFragment(preview.fragment)
-    setResult(preview.result)
-  }
-
-  function handleUndo() {
+  const handleUndo = () => {
     setMessages((previousMessages) => [...previousMessages.slice(0, -2)])
     setCurrentPreview({ fragment: undefined, result: undefined })
   }
@@ -331,6 +376,9 @@ export default function Home() {
             files={files}
             handleFileChange={handleFileChange}
           >
+            <CommandPicker 
+              onCommandSelect={(command) => setChatInput(command + ' ')} 
+            />
             <ChatPicker
               templates={templates}
               selectedTemplate={selectedTemplate}
