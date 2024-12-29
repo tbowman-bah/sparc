@@ -197,37 +197,42 @@ export default function Home() {
 
     // Check for commands first
     if (chatInput.startsWith('/')) {
-      const isCommand = await handleCommand(
-        chatInput,
-        (params) => {
-          // For commands, only update messages without submitting to chat API
-          if (params.messages) {
-            const newMessages = params.messages.map(msg => {
-              const content = msg.content.map(c => {
-                if ('type' in c) {
-                  switch (c.type) {
-                    case 'text':
-                      return { type: 'text', text: c.text } as MessageText;
-                    case 'code':
-                      return { type: 'code', text: c.text } as MessageCode;
-                    case 'image':
-                      if ('image' in c) {
-                        return { type: 'image', image: c.image } as MessageImage;
-                      }
-                      break;
-                  }
+    const isCommand = await handleCommand(
+      chatInput,
+      (params) => {
+        // For commands, only update messages without submitting to chat API
+        if (params.messages) {
+          const newMessages = params.messages.map(msg => {
+            const content = msg.content.map(c => {
+              if ('type' in c) {
+                switch (c.type) {
+                  case 'text':
+                    return { type: 'text', text: c.text } as MessageText;
+                  case 'code':
+                    return { type: 'code', text: c.text } as MessageCode;
+                  case 'image':
+                    if ('image' in c) {
+                      return { type: 'image', image: c.image } as MessageImage;
+                    }
+                    break;
                 }
-                return null;
-              }).filter((c): c is MessageText | MessageCode | MessageImage => c !== null);
-              
-              return {
-                role: msg.role as Message['role'],
-                content
-              } as Message;
-            });
-            setMessages(prev => [...prev, ...newMessages]);
-          }
-        },
+              }
+              return null;
+            }).filter((c): c is MessageText | MessageCode | MessageImage => c !== null);
+            
+            return {
+              role: msg.role as Message['role'],
+              content
+            } as Message;
+          });
+          setMessages(prev => [...prev, ...newMessages]);
+        }
+        // Clear input if specified
+        if (params.clearInput) {
+          setChatInput('');
+          setFiles([]);
+        }
+      },
         {
           userID: session?.user?.id,
           template: currentTemplate,
