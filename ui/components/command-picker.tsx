@@ -38,7 +38,7 @@ export function CommandPicker({
             <SelectItem value="_none">
               <div className="flex items-center space-x-2">
                 <Terminal className="flex text-[#a1a1aa]" width={14} height={14} />
-                <span>No Command</span>
+                <span>Code</span>
               </div>
             </SelectItem>
             {commandList.map((cmd) => (
