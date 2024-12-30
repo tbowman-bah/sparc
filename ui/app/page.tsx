@@ -410,6 +410,8 @@ export default function Home() {
             canClear={messages.length > 0}
             canUndo={messages.length > 1 && !isLoading}
             onUndo={handleUndo}
+            showFragment={showFragment}
+            onToggleFragment={() => setShowFragment(!showFragment)}
           />
           <Chat
             messages={messages}
@@ -448,16 +450,18 @@ export default function Home() {
             />
           </ChatInput>
         </div>
-        <Preview
-          apiKey={apiKey}
-          selectedTab={currentTab}
-          onSelectedTabChange={setCurrentTab}
-          isChatLoading={isLoading}
-          isPreviewLoading={isPreviewLoading}
-          fragment={fragment}
-          result={result as ExecutionResult}
-          onClose={() => setFragment(undefined)}
-        />
+        {showFragment && (
+          <Preview
+            apiKey={apiKey}
+            selectedTab={currentTab}
+            onSelectedTabChange={setCurrentTab}
+            isChatLoading={isLoading}
+            isPreviewLoading={isPreviewLoading}
+            fragment={fragment}
+            result={result as ExecutionResult}
+            onClose={() => setFragment(undefined)}
+          />
+        )}
       </div>
     </main>
   )
