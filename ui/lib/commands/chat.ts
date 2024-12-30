@@ -48,16 +48,24 @@ export const chat: CommandHandler = async (args: string, submit, context) => {
       },
       body: JSON.stringify({
         prompt: args,
-        messages: previousMessages,
+        messages: previousMessages.map(msg => ({
+          role: msg.role,
+          content: msg.content.map(c => ({
+            type: c.type,
+            text: c.type === 'text' ? c.text : ''
+          }))
+        })),
         modelName: context.config?.modelName || 'claude-3-sonnet-20240229'
       })
     });
 
     if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
+      const errorData = await response.json();
+      throw new Error(errorData.error || `API request failed with status ${response.status}`);
     }
 
-    const { content } = await response.json();
+    const data = await response.json();
+    const content = data.content;
 
     // Submit final response
     submit({
