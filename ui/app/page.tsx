@@ -83,7 +83,8 @@ export default function Home() {
       handleCommand(
         '/chat Tell me about yourself', 
         (params) => {
-          if (params.messages) {
+          // Only handle the final response, skip intermediate loading states
+          if (params.messages && !params.messages.some(msg => msg.loading || msg.streaming)) {
             const newMessages = params.messages.map(msg => {
               const content = msg.content.map(c => {
                 if ('type' in c) {
@@ -105,8 +106,8 @@ export default function Home() {
               return {
                 role: msg.role as Message['role'],
                 content,
-                loading: msg.loading,
-                streaming: msg.streaming
+                loading: false,
+                streaming: false
               } as Message;
             });
             
