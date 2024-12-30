@@ -37,7 +37,7 @@ export function Chat({
           {message.content.map((content, id) => {
             if (content.type === 'text') {
               return (
-                <div className="flex items-center gap-2">
+                <div key={id} className="flex items-center gap-2">
                   {content.icon && (
                     <div className="w-5 h-5 flex items-center justify-center">
                       {content.icon === 'Search' && <Search className="w-4 h-4" />}
