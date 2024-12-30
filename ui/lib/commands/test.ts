@@ -91,7 +91,10 @@ export const test: CommandHandler = async (args: string, submit, context) => {
           { type: 'text', text: helloWorld.commentary },
           { type: 'code', text: helloWorld.code[0].file_content }
         ],
-        object: helloWorld, // This will trigger the fragment button rendering in Chat component
+        object: {
+          ...helloWorld,
+          title: "Hello World Example"  // Explicitly set title for fragment button
+        },
         result: result
       }],
       userID: context.userID,
