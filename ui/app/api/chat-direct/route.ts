@@ -41,14 +41,24 @@ export async function POST(req: Request) {
     // Transform the stream to emit text chunks
     const textStream = new ReadableStream({
       async start(controller) {
-        for await (const chunk of stream) {
-          controller.enqueue(chunk.content);
+        try {
+          for await (const chunk of stream) {
+            if (chunk.content) {
+              controller.enqueue(chunk.content);
+            }
+          }
+          controller.close();
+        } catch (error) {
+          controller.error(error);
         }
-        controller.close();
       }
     });
 
-    return new StreamingTextResponse(textStream);
+    return new StreamingTextResponse(textStream, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+      },
+    });
     
   } catch (error: any) {
     return NextResponse.json(
