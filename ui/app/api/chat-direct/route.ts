@@ -5,15 +5,24 @@ import { chatTemplate } from '@/lib/commands/chat-template'
 
 export async function POST(req: Request) {
   try {
-    const { prompt, modelName } = await req.json()
+    const { prompt, messages: previousMessages, modelName } = await req.json()
     
     const model = new ChatAnthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,
       modelName: modelName || 'claude-3-sonnet-20240229'
     })
 
+    // Convert previous messages to the format expected by the model
+    const messageHistory = previousMessages.map((msg: any) => {
+      const messageText = msg.content[0]?.text || ''
+      return msg.role === 'user' 
+        ? new HumanMessage(messageText)
+        : new SystemMessage(messageText)
+    })
+
     const messages = [
       new SystemMessage(chatTemplate.system),
+      ...messageHistory,
       new HumanMessage(prompt)
     ]
 
