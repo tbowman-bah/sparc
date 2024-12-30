@@ -3,17 +3,14 @@ import { CommandHandler } from './types'
 export const chat: CommandHandler = async (args: string, submit, context) => {
   if (!args) return false
 
-  console.log('=== Chat Command Context ===')
-  console.log('Messages:', context.messages)
+  console.log('=== Chat Command Start ===')
+  console.log('Args:', args)
 
   // Submit user message immediately
   submit({
     messages: [{
       role: 'user',
-      content: [{
-        type: 'text',
-        text: args
-      }]
+      content: [{ type: 'text', text: args }]
     }],
     userID: context.userID,
     model: context.model,
@@ -29,7 +26,7 @@ export const chat: CommandHandler = async (args: string, submit, context) => {
       role: 'assistant',
       content: [{
         type: 'text',
-        text: 'Thinking...',
+        text: 'Processing your message...',
         icon: 'MessageCircle'
       }],
       loading: true
@@ -41,54 +38,14 @@ export const chat: CommandHandler = async (args: string, submit, context) => {
   })
 
   try {
-    // Build detailed conversation history
-    const history = context.messages
-      .filter(msg => msg.role === 'user' || msg.role === 'assistant') // Only include user and assistant messages
-      .map(msg => {
-        const content = msg.content[0].text;
-        return `${msg.role === 'user' ? 'User' : 'Assistant'}: ${content}`;
-      })
-      .join('\n\n');
-    
-    // Create prompt with clear context
-    const prompt = history 
-      ? `Previous conversation:\n${history}\n\nCurrent message:\nUser: ${args}`
-      : `User: ${args}`;
-
-    // Ensure userID is defined
-    if (!context.userID) {
-      throw new Error('userID is required');
-    }
-
-    // Standardize fragment structure
-    const fragment = {
-      template: context.template || 'code-interpreter-v1',
-      messages: [{
-        role: 'user',
-        content: [{
-          type: 'text',
-          text: prompt
-        }]
-      }],
-      has_additional_dependencies: false,
-      install_dependencies_command: '',
-      additional_dependencies: [],
-      code: [{
-        file_name: 'chat.txt',
-        file_path: 'chat.txt',
-        file_content: prompt,
-        file_finished: true
-      }]
-    };
-
-    const response = await fetch('/api/sandbox', {
+    const response = await fetch('/api/chat-direct', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        fragment,
-        userID: context.userID
+        prompt: args,
+        modelName: context.config?.modelName || 'claude-3-sonnet-20240229'
       })
     });
 
@@ -110,9 +67,15 @@ export const chat: CommandHandler = async (args: string, submit, context) => {
       config: context.config
     });
 
+    console.log('=== Chat Command Complete ===')
     return true
   } catch (error: any) {
-    console.error('Chat error:', error)
+    console.error('=== Chat Command Error ===')
+    console.error('Error Details:', {
+      message: error?.message,
+      stack: error?.stack,
+      name: error?.name
+    })
     
     submit({
       messages: [{
