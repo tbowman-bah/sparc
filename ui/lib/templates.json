@@ -1,9 +1,9 @@
 {
   "chat": {
-    "name": "Chat UI developer",
+    "name": "React Chat UI",
     "lib": ["react@18", "typescript", "@types/react", "@types/react-dom", "tailwindcss", "shadcn/ui", "lucide-react"],
     "file": "app.tsx",
-    "instructions": "Creates a modern chat interface with React and Tailwind CSS. Includes message bubbles, input field, and basic chat functionality.",
+    "instructions": "Generates React components for chat interfaces using React and Tailwind CSS. Creates message bubbles, input fields, and chat functionality components.",
     "port": 3000
   },
   "code-interpreter-v1": {
