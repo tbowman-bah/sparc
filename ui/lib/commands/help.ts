@@ -31,7 +31,7 @@ Available Commands:
 /test - Generate a hello world example
 /help - Show this help message
 
-For more information visit: https://github.com/e2b-dev/fragments
+For more information visit: https://github.com/ruvnet/sparc
 `
 
 export const help: CommandHandler = async (args: string, submit, context) => {
