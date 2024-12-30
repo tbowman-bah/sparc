@@ -261,10 +261,7 @@ export default function Home() {
           userID: session?.user?.id,
           template: currentTemplate,
           model: currentModel,
-          config: {
-            ...languageModel,
-            skipAI: true // Signal to skip AI processing
-          },
+          config: languageModel,
           messages: messages.map(msg => ({
             role: msg.role,
             content: msg.content.filter(c => 'text' in c).map(c => ({
