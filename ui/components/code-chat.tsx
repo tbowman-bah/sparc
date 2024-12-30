@@ -1,11 +1,11 @@
-import { Message } from '@/lib/messages'
-import { FragmentSchema } from '@/lib/schema'
-import { ExecutionResult } from '@/lib/types'
+import { Message } from '../lib/messages'
+import { FragmentSchema } from '../lib/schema'
+import { ExecutionResult } from '../lib/types'
 import { DeepPartial } from 'ai'
-import { Loader2Icon, LoaderIcon, Terminal, Search, BookOpen, Database, LineChart, Lightbulb } from 'lucide-react'
+import { Loader2Icon, LoaderIcon, Terminal } from 'lucide-react'
 import { useEffect } from 'react'
 
-export function Chat({
+export function CodeChat({
   messages,
   isLoading,
   setCurrentPreview,
@@ -18,7 +18,7 @@ export function Chat({
   }) => void
 }) {
   useEffect(() => {
-    const chatContainer = document.getElementById('chat-container')
+    const chatContainer = document.getElementById('code-chat-container')
     if (chatContainer) {
       chatContainer.scrollTop = chatContainer.scrollHeight
     }
@@ -26,7 +26,7 @@ export function Chat({
 
   return (
     <div
-      id="chat-container"
+      id="code-chat-container"
       className="flex flex-col pb-4 gap-2 overflow-y-auto max-h-full"
     >
       {messages.map((message: Message, index: number) => (
@@ -36,29 +36,13 @@ export function Chat({
         >
           {message.content.map((content, id) => {
             if (content.type === 'text') {
-              return (
-                <div key={id} className="flex items-center gap-2">
-                  {content.icon && (
-                    <div className="w-5 h-5 flex items-center justify-center">
-                      {content.icon === 'Search' && <Search className="w-4 h-4" />}
-                      {content.icon === 'BookOpen' && <BookOpen className="w-4 h-4" />}
-                      {content.icon === 'Database' && <Database className="w-4 h-4" />}
-                      {content.icon === 'LineChart' && <LineChart className="w-4 h-4" />}
-                      {content.icon === 'Lightbulb' && <Lightbulb className="w-4 h-4" />}
-                    </div>
-                  )}
-                  <span>{content.text}</span>
-                </div>
-              )
+              return <span key={id}>{content.text}</span>
             }
-            if (content.type === 'image') {
+            if (content.type === 'code') {
               return (
-                <img
-                  key={id}
-                  src={content.image}
-                  alt="fragment"
-                  className="mr-2 inline-block w-12 h-12 object-cover rounded-lg bg-white mb-2"
-                />
+                <div key={id} className="bg-black/5 dark:bg-white/5 p-2 rounded-lg">
+                  <pre className="whitespace-pre-wrap">{content.text || content.code}</pre>
+                </div>
               )
             }
           })}
