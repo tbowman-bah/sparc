@@ -97,7 +97,8 @@ export const test: CommandHandler = async (args: string, submit, context) => {
       userID: context.userID,
       model: context.model,
       template: context.template,
-      config: newContext.config
+      config: newContext.config,
+      updateLast: true // Add this to update the last message instead of adding new one
     })
 
     return true
