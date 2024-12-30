@@ -31,7 +31,6 @@ Available Commands:
 /sparc - Generate project specifications
 /pseudo - Create pseudocode for a solution
 /code, /coding - Generate implementation code
-/fragment [input] - Process input directly without command prefix
 `
 
 export const help: CommandHandler = async (args: string, submit, context) => {
