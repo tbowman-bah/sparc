@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { StreamingTextResponse, Message } from 'ai'
 import { ChatAnthropic } from '@langchain/anthropic'
 import { HumanMessage, SystemMessage } from '@langchain/core/messages'
 import { chatTemplate } from '@/lib/commands/chat-template'
@@ -9,7 +9,8 @@ export async function POST(req: Request) {
     
     const model = new ChatAnthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,
-      modelName: modelName || 'claude-3-sonnet-20240229'
+      modelName: modelName || 'claude-3-sonnet-20240229',
+      streaming: true
     })
 
     // Convert previous messages to the format expected by the model
@@ -34,19 +35,8 @@ export async function POST(req: Request) {
     // Always add system message as first message
     const messages = [new SystemMessage(chatTemplate.system), ...filteredHistory, new HumanMessage(prompt)]
 
-    try {
-      const response = await model.invoke(messages)
-      
-      return NextResponse.json({ 
-        content: response.content.toString() 
-      })
-    } catch (error: any) {
-      console.error('Chat API Error:', error);
-      return NextResponse.json(
-        { error: error.message || 'Failed to process chat request' },
-        { status: 500 }
-      )
-    }
+    const stream = await model.stream(messages);
+    return new StreamingTextResponse(stream);
     
   } catch (error: any) {
     return NextResponse.json(
