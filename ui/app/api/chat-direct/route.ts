@@ -28,11 +28,10 @@ export async function POST(req: Request) {
         : new SystemMessage(messageText)
     }) || []
 
-    const messages = [
-      new SystemMessage(chatTemplate.system),
-      ...messageHistory,
-      new HumanMessage(prompt)
-    ]
+    // Only include system message if it's the first message
+    const messages = messageHistory.length === 0 
+      ? [new SystemMessage(chatTemplate.system), new HumanMessage(prompt)]
+      : [...messageHistory, new HumanMessage(prompt)]
 
     try {
       const response = await model.invoke(messages)
