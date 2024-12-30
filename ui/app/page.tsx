@@ -213,15 +213,20 @@ export default function Home() {
           })
         }
 
+        // Add user message to chat
+        const newMessages = [...messages, {
+          role: 'user',
+          content,
+        }]
+        setMessages(newMessages)
+
+        // Submit for AI processing
         submit({
           userID: session?.user?.id,
-          messages: toAISDKMessages([...messages, {
-            role: 'user',
-            content,
-          }]),
+          messages: toAISDKMessages(newMessages),
           template: currentTemplate,
           model: currentModel,
-          config: languageModel,
+          config: context.config, // Use context config to respect command overrides
         })
 
         return true
@@ -251,10 +256,17 @@ export default function Home() {
               
               return {
                 role: msg.role as Message['role'],
-                content
+                content,
+                loading: msg.loading,
+                streaming: msg.streaming
               } as Message;
             });
-            setMessages(prev => [...prev, ...newMessages]);
+            
+            if (params.updateLast) {
+              setMessages(prev => [...prev.slice(0, -1), ...newMessages]);
+            } else {
+              setMessages(prev => [...prev, ...newMessages]);
+            }
           }
         },
         {
