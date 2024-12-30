@@ -24,14 +24,14 @@ SPARC Methodology Overview:
    - Ensure documentation and readiness for deployment
 
 Available Commands:
-/research [topic] - Perform in-depth research on a topic
 /chat [message] - Engage in conversation with the assistant
-/help - Show this help message
-/plan - Create a project plan using SPARC methodology
-/sparc - Generate project specifications
-/pseudo - Create pseudocode for a solution
-/code, /coding - Generate implementation code
+/research [topic] - Get SPARC-style analysis on a topic
+/plan [task] - Create a project plan using SPARC methodology
+/sparc - Enter specification mode
 /test - Generate a hello world example
+/help - Show this help message
+
+For more information visit: https://github.com/e2b-dev/fragments
 `
 
 export const help: CommandHandler = async (args: string, submit, context) => {
