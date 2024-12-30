@@ -25,16 +25,13 @@ export async function POST(req: Request) {
         messageText = msg.content || ''
       }
       
-      return msg.role === 'user' 
-        ? new HumanMessage(messageText)
-        : new SystemMessage(messageText)
+      return msg.role === 'system'
+        ? new SystemMessage(messageText)
+        : new HumanMessage(messageText)
     }) || []
 
-    // Filter out any existing system messages from history
-    const filteredHistory = messageHistory.filter(msg => !(msg instanceof SystemMessage));
-    
-    // Always add system message as first message
-    const messages = [new SystemMessage(chatTemplate.system), ...filteredHistory, new HumanMessage(prompt)]
+    // Use the full message history
+    const messages = messageHistory
 
     const stream = await model.stream(messages);
     

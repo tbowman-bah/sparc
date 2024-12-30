@@ -38,14 +38,14 @@ export const chat: CommandHandler = async (args: string, submit, context) => {
   })
 
   try {
-    // Filter out any existing system messages
-    const previousMessages = (context.messages || []).filter(msg => msg.role !== 'system');
+    // Get all previous messages including system messages
+    const previousMessages = context.messages || [];
     
-    // Always add system message as first message if template has one
-    const systemMessage = context.template?.system;
-    const messagePayload = systemMessage
-      ? [{ role: 'system', content: [{ type: 'text', text: systemMessage }] }, ...previousMessages]
-      : previousMessages;
+    // Add the current user message
+    const messagePayload = [...previousMessages, {
+      role: 'user',
+      content: [{ type: 'text', text: args }]
+    }];
 
     const requestBody = {
       prompt: args,
