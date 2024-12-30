@@ -1,5 +1,5 @@
 import { Command, CommandHandler, CommandContext, SubmitFunction } from './types'
-import { toMessageImage } from '../messages'
+import { toMessageImage, toAISDKMessages } from '../messages'
 
 export const codingCommand: Command = {
   name: 'Coding',
@@ -18,12 +18,15 @@ export const codingCommand: Command = {
       });
     }
 
-    // Submit user message
+    // Add user message to chat
+    const messages = [...context.messages, {
+      role: 'user',
+      content
+    }];
+
+    // Submit to AI processing pipeline
     submit({
-      messages: [{
-        role: 'user',
-        content
-      }],
+      messages: toAISDKMessages(messages),
       userID: context.userID,
       model: context.model,
       template: context.template,
