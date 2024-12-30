@@ -38,15 +38,12 @@ export const chat: CommandHandler = async (args: string, submit, context) => {
   })
 
   try {
-    // Check if there's already a system message in the history
-    const hasSystemMessage = (context.messages || []).some(msg => msg.role === 'system');
+    // Filter out any existing system messages
+    const previousMessages = (context.messages || []).filter(msg => msg.role !== 'system');
     
-    // Get previous messages without filtering
-    const previousMessages = context.messages || [];
-    
-    // Only add system message if none exists
+    // Always add system message as first message if template has one
     const systemMessage = context.template?.system;
-    const messagePayload = (!hasSystemMessage && systemMessage)
+    const messagePayload = systemMessage
       ? [{ role: 'system', content: [{ type: 'text', text: systemMessage }] }, ...previousMessages]
       : previousMessages;
 
