@@ -4,6 +4,7 @@ import { chat } from './commands/chat'
 import { plan } from './commands/plan'
 import { help } from './commands/help'
 import { spec as sparc } from './commands/spec'
+import { fragment } from './commands/fragment'
 
 export const commands: CommandRegistry = {
   research: {
@@ -30,6 +31,11 @@ export const commands: CommandRegistry = {
     name: 'SPARC',
     description: 'Enter specification mode',
     handler: sparc
+  },
+  fragment: {
+    name: 'Fragment',
+    description: 'Process input without command prefix',
+    handler: fragment
   }
 }
 
