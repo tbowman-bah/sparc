@@ -28,6 +28,7 @@ export function CommandPicker({
       <Select
         name="command"
         onValueChange={handleCommandSelect}
+        defaultValue="_none"
       >
         <SelectTrigger className="whitespace-nowrap border-none shadow-none focus:ring-0 px-0 py-0 h-6 text-xs">
           <SelectValue placeholder="Commands" />
