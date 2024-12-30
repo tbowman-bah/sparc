@@ -32,7 +32,8 @@ export const commands: CommandRegistry = {
     description: 'Enter specification mode',
     handler: sparc
   },
-  coding: codingCommand
+  coding: codingCommand,
+  code: codingCommand // Add alias for /code command
 }
 
 export async function handleCommand(input: string, submit: SubmitFunction, context: CommandContext): Promise<boolean> {
