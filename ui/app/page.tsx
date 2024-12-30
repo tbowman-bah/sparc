@@ -17,6 +17,7 @@ import { supabase } from '../lib/supabase'
 import templates, { TemplateId } from '../lib/templates'
 import { ExecutionResult } from '../lib/types'
 import { handleCommand } from '../lib/commands'
+import { SubmitFunction, CommandContext } from '../lib/commands/types'
 import { DeepPartial } from 'ai'
 import { experimental_useObject as useObject } from 'ai/react'
 import { usePostHog } from 'posthog-js/react'
@@ -201,36 +202,63 @@ export default function Home() {
       setChatInput('');
       setFiles([]);
       
-      const isCommand = await handleCommand(
-      chatInput,
-      (params) => {
-        if (params.messages) {
-          const newMessages = params.messages.map(msg => {
-            const content = msg.content.map(c => {
-              if ('type' in c) {
-                switch (c.type) {
-                  case 'text':
-                    return { type: 'text', text: c.text } as MessageText;
-                  case 'code':
-                    return { type: 'code', text: c.text } as MessageCode;
-                  case 'image':
-                    if ('image' in c) {
-                      return { type: 'image', image: c.image } as MessageImage;
-                    }
-                    break;
-                }
-              }
-              return null;
-            }).filter((c): c is MessageText | MessageCode | MessageImage => c !== null);
-            
-            return {
-              role: msg.role as Message['role'],
-              content
-            } as Message;
-          });
-          setMessages(prev => [...prev, ...newMessages]);
+      const defaultHandler = async (args: string, submit: SubmitFunction, context: CommandContext) => {
+        // Handle regular chat messages
+        const content: Message['content'] = [{ type: 'text', text: args }]
+        const images = await toMessageImage(files)
+
+        if (images.length > 0) {
+          images.forEach((image) => {
+            content.push({ type: 'image', image: image.image })
+          })
         }
-      },
+
+        const updatedMessages = addMessage({
+          role: 'user',
+          content,
+        })
+
+        submit({
+          userID: session?.user?.id,
+          messages: toAISDKMessages(updatedMessages),
+          template: currentTemplate,
+          model: currentModel,
+          config: languageModel,
+        })
+
+        return true
+      }
+
+      const isCommand = await handleCommand(
+        chatInput,
+        (params) => {
+          if (params.messages) {
+            const newMessages = params.messages.map(msg => {
+              const content = msg.content.map(c => {
+                if ('type' in c) {
+                  switch (c.type) {
+                    case 'text':
+                      return { type: 'text', text: c.text } as MessageText;
+                    case 'code':
+                      return { type: 'code', text: c.text } as MessageCode;
+                    case 'image':
+                      if ('image' in c) {
+                        return { type: 'image', image: c.image } as MessageImage;
+                      }
+                      break;
+                  }
+                }
+                return null;
+              }).filter((c): c is MessageText | MessageCode | MessageImage => c !== null);
+              
+              return {
+                role: msg.role as Message['role'],
+                content
+              } as Message;
+            });
+            setMessages(prev => [...prev, ...newMessages]);
+          }
+        },
         {
           userID: session?.user?.id,
           template: currentTemplate,
@@ -248,7 +276,8 @@ export default function Home() {
             })),
             loading: false,
             streaming: false
-          }))
+          })),
+          defaultHandler
         }
       );
       if (isCommand) {
