@@ -30,7 +30,7 @@ Available Commands:
 /plan - Create a project plan using SPARC methodology
 /sparc - Generate project specifications
 /pseudo - Create pseudocode for a solution
-/code - Generate implementation code
+/code, /coding - Generate implementation code
 `
 
 export const help: CommandHandler = async (args: string, submit, context) => {
