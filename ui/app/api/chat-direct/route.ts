@@ -13,12 +13,20 @@ export async function POST(req: Request) {
     })
 
     // Convert previous messages to the format expected by the model
-    const messageHistory = previousMessages.map((msg: any) => {
-      const messageText = msg.content[0]?.text || ''
+    const messageHistory = previousMessages?.map((msg: any) => {
+      // Handle nested content structure
+      let messageText = ''
+      if (Array.isArray(msg.content)) {
+        const textContent = msg.content.find((c: any) => c.type === 'text')
+        messageText = textContent?.text || ''
+      } else {
+        messageText = msg.content || ''
+      }
+      
       return msg.role === 'user' 
         ? new HumanMessage(messageText)
         : new SystemMessage(messageText)
-    })
+    }) || []
 
     const messages = [
       new SystemMessage(chatTemplate.system),
