@@ -1,10 +1,10 @@
 {
   "chat": {
-    "name": "Chat",
-    "lib": [],
-    "file": null,
-    "instructions": "General chat interface for natural conversations.",
-    "port": null
+    "name": "Chat UI developer",
+    "lib": ["react@18", "typescript", "@types/react", "@types/react-dom", "tailwindcss", "shadcn/ui", "lucide-react"],
+    "file": "app.tsx",
+    "instructions": "Creates a modern chat interface with React and Tailwind CSS. Includes message bubbles, input field, and basic chat functionality.",
+    "port": 3000
   },
   "code-interpreter-v1": {
     "name": "Python data analyst",
