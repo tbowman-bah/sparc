@@ -32,6 +32,7 @@ export default function Home() {
   }) => {
     setFragment(preview.fragment)
     setResult(preview.result)
+    setCurrentPreviewState(preview)
   }
 
   const addMessage = (message: Message) => {
@@ -65,7 +66,11 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([])
   const [fragment, setFragment] = useState<DeepPartial<FragmentSchema>>()
   const [currentTab, setCurrentTab] = useState<'code' | 'fragment'>('code')
-  const [showFragment, setShowFragment] = useState(true)
+  const [showFragment, setShowFragment] = useState<boolean>(true)
+  const [currentPreviewState, setCurrentPreviewState] = useState<{
+    fragment: DeepPartial<FragmentSchema> | undefined;
+    result: ExecutionResult | undefined;
+  }>({ fragment: undefined, result: undefined });
   const [isPreviewLoading, setIsPreviewLoading] = useState(false)
   const [isAuthDialogOpen, setAuthDialog] = useState(false)
   const [authView, setAuthView] = useState<AuthViewType>('sign_in')
@@ -450,16 +455,19 @@ export default function Home() {
             />
           </ChatInput>
         </div>
-        {showFragment && (
+        {showFragment && (currentPreviewState.fragment || fragment) && (
           <Preview
             apiKey={apiKey}
             selectedTab={currentTab}
             onSelectedTabChange={setCurrentTab}
             isChatLoading={isLoading}
             isPreviewLoading={isPreviewLoading}
-            fragment={fragment}
-            result={result as ExecutionResult}
-            onClose={() => setFragment(undefined)}
+            fragment={currentPreviewState.fragment || fragment}
+            result={(currentPreviewState.result || result) as ExecutionResult}
+            onClose={() => {
+              setFragment(undefined)
+              setCurrentPreviewState({ fragment: undefined, result: undefined })
+            }}
           />
         )}
       </div>
