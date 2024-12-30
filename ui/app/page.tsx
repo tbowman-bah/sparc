@@ -138,8 +138,11 @@ export default function Home() {
 
           setResult(result)
           setCurrentPreview({ fragment, result })
-          setMessage({ result })
-          setCurrentTab('fragment')
+          setMessage({ result });
+          // Check if we should switch tabs based on config
+          if (context.config?.setCurrentTab) {
+            setCurrentTab(context.config.setCurrentTab);
+          }
         } catch (err) {
           console.error('Sandbox error:', err)
         } finally {

@@ -97,7 +97,10 @@ export const test: CommandHandler = async (args: string, submit, context) => {
       userID: context.userID,
       model: context.model,
       template: context.template,
-      config: newContext.config,
+      config: {
+        ...newContext.config,
+        setCurrentTab: 'fragment' // Signal to switch to fragment tab
+      },
       updateLast: true
     })
 
