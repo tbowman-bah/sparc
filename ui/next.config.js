@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+export default {
   serverExternalPackages: ['child_process'],
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -15,5 +15,3 @@ const nextConfig = {
     return config
   }
 }
-
-module.exports = nextConfig
