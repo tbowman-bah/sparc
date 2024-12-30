@@ -65,6 +65,7 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([])
   const [fragment, setFragment] = useState<DeepPartial<FragmentSchema>>()
   const [currentTab, setCurrentTab] = useState<'code' | 'fragment'>('code')
+  const [showFragment, setShowFragment] = useState(true)
   const [isPreviewLoading, setIsPreviewLoading] = useState(false)
   const [isAuthDialogOpen, setAuthDialog] = useState(false)
   const [authView, setAuthView] = useState<AuthViewType>('sign_in')
@@ -396,9 +397,9 @@ export default function Home() {
           supabase={supabase}
         />
       )}
-      <div className="grid w-full md:grid-cols-2">
+      <div className={`grid w-full ${showFragment ? 'md:grid-cols-2' : 'md:grid-cols-1'}`}>
         <div
-          className={`flex flex-col w-full max-h-full max-w-[800px] mx-auto px-4 overflow-auto ${fragment ? 'col-span-1' : 'col-span-2'}`}
+          className={`flex flex-col w-full max-h-full max-w-[800px] mx-auto px-4 overflow-auto ${showFragment && fragment ? 'col-span-1' : 'col-span-2'}`}
         >
           <NavBar
             session={session}
