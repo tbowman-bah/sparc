@@ -38,6 +38,9 @@ export const chat: CommandHandler = async (args: string, submit, context) => {
   })
 
   try {
+    // Get previous messages from context
+    const previousMessages = context.messages || []
+
     const response = await fetch('/api/chat-direct', {
       method: 'POST',
       headers: {
@@ -45,6 +48,7 @@ export const chat: CommandHandler = async (args: string, submit, context) => {
       },
       body: JSON.stringify({
         prompt: args,
+        messages: previousMessages,
         modelName: context.config?.modelName || 'claude-3-sonnet-20240229'
       })
     });
