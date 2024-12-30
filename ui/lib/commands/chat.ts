@@ -92,19 +92,35 @@ export const chat: CommandHandler = async (args: string, submit, context) => {
     const decoder = new TextDecoder();
     let accumulatedContent = '';
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      
-      const chunk = decoder.decode(value);
-      accumulatedContent += chunk;
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        const chunk = decoder.decode(value);
+        accumulatedContent += chunk;
 
-      // Update the message with accumulated content
+        // Update the message with accumulated content
+        submit({
+          messages: [{
+            role: 'assistant',
+            content: [{ type: 'text', text: accumulatedContent }],
+            streaming: true
+          }],
+          userID: context.userID,
+          model: context.model,
+          template: context.template,
+          config: context.config,
+          updateLast: true
+        });
+      }
+
+      // Send final message with streaming false
       submit({
         messages: [{
           role: 'assistant',
           content: [{ type: 'text', text: accumulatedContent }],
-          streaming: !done
+          streaming: false
         }],
         userID: context.userID,
         model: context.model,
@@ -112,6 +128,9 @@ export const chat: CommandHandler = async (args: string, submit, context) => {
         config: context.config,
         updateLast: true
       });
+    } catch (error) {
+      console.error('Streaming error:', error);
+      throw error;
     }
 
     console.log('=== Chat Command Complete ===')
