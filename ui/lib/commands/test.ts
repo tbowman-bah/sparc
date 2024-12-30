@@ -97,12 +97,24 @@ export const test: CommandHandler = async (args: string, submit, context) => {
       userID: context.userID,
       model: context.model,
       template: context.template,
-      config: {
-        ...newContext.config,
-        setCurrentTab: 'fragment' // Signal to switch to fragment tab
-      },
+      config: newContext.config,
       updateLast: true
     })
+
+    // Force tab switch after a short delay to ensure UI is updated
+    setTimeout(() => {
+      submit({
+        messages: [],
+        userID: context.userID,
+        model: context.model,
+        template: context.template,
+        config: {
+          ...newContext.config,
+          forceTabSwitch: 'fragment'
+        },
+        updateLast: false
+      })
+    }, 100)
 
     return true
   } catch (error: any) {
