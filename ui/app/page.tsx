@@ -213,14 +213,12 @@ export default function Home() {
           })
         }
 
-        const updatedMessages = addMessage({
-          role: 'user',
-          content,
-        })
-
         submit({
           userID: session?.user?.id,
-          messages: toAISDKMessages(updatedMessages),
+          messages: toAISDKMessages([...messages, {
+            role: 'user',
+            content,
+          }]),
           template: currentTemplate,
           model: currentModel,
           config: languageModel,
