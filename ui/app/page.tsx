@@ -76,6 +76,73 @@ export default function Home() {
   const [authView, setAuthView] = useState<AuthViewType>('sign_in')
   const [isRateLimited, setIsRateLimited] = useState(false)
   const { session, apiKey } = useAuth(setAuthDialog, setAuthView)
+  
+  // Auto-chat initialization
+  useEffect(() => {
+    if (session && messages.length === 0) {
+      handleCommand(
+        '/chat Tell me about yourself', 
+        (params) => {
+          if (params.messages) {
+            const newMessages = params.messages.map(msg => {
+              const content = msg.content.map(c => {
+                if ('type' in c) {
+                  switch (c.type) {
+                    case 'text':
+                      return { type: 'text', text: c.text } as MessageText;
+                    case 'code':
+                      return { type: 'code', text: c.text } as MessageCode;
+                    case 'image':
+                      if ('image' in c) {
+                        return { type: 'image', image: c.image } as MessageImage;
+                      }
+                      break;
+                  }
+                }
+                return null;
+              }).filter((c): c is MessageText | MessageCode | MessageImage => c !== null);
+              
+              return {
+                role: msg.role as Message['role'],
+                content,
+                loading: msg.loading,
+                streaming: msg.streaming
+              } as Message;
+            });
+            
+            if (params.updateLast) {
+              setMessages(prev => [...prev.slice(0, -1), ...newMessages]);
+            } else {
+              setMessages(prev => [...prev, ...newMessages]);
+            }
+          }
+        },
+        {
+          userID: session?.user?.id,
+          template: currentTemplate,
+          model: currentModel,
+          config: languageModel,
+          messages: [],
+          defaultHandler: async (args: string, submit: SubmitFunction, context: CommandContext) => {
+            const content: Message['content'] = [{ type: 'text', text: args }]
+            const newMessages = [...messages, {
+              role: 'user',
+              content,
+            }]
+            setMessages(newMessages)
+            submit({
+              userID: session?.user?.id,
+              messages: toAISDKMessages(newMessages),
+              template: currentTemplate,
+              model: currentModel,
+              config: context.config,
+            })
+            return true
+          }
+        }
+      )
+    }
+  }, [session, messages.length])
 
   const currentModel = modelsList.models.find(
     (model) => model.id === languageModel.model,
