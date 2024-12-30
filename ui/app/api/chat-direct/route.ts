@@ -1,4 +1,5 @@
 import { StreamingTextResponse, Message } from 'ai'
+import { ReadableStream } from 'stream/web'
 import { ChatAnthropic } from '@langchain/anthropic'
 import { HumanMessage, SystemMessage } from '@langchain/core/messages'
 import { chatTemplate } from '@/lib/commands/chat-template'
@@ -36,7 +37,18 @@ export async function POST(req: Request) {
     const messages = [new SystemMessage(chatTemplate.system), ...filteredHistory, new HumanMessage(prompt)]
 
     const stream = await model.stream(messages);
-    return new StreamingTextResponse(stream);
+    
+    // Transform the stream to emit text chunks
+    const textStream = new ReadableStream({
+      async start(controller) {
+        for await (const chunk of stream) {
+          controller.enqueue(chunk.content);
+        }
+        controller.close();
+      }
+    });
+
+    return new StreamingTextResponse(textStream);
     
   } catch (error: any) {
     return NextResponse.json(
