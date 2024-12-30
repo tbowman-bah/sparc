@@ -50,6 +50,20 @@ export const chat: CommandHandler = async (args: string, submit, context) => {
       ? [{ role: 'system', content: [{ type: 'text', text: systemMessage }] }, ...previousMessages]
       : previousMessages;
 
+    const requestBody = {
+      prompt: args,
+      messages: messagePayload.map(msg => ({
+        role: msg.role,
+        content: msg.content.map(c => ({
+          type: c.type,
+          text: c.type === 'text' ? c.text : ''
+        }))
+      })),
+      modelName: context.config?.modelName || 'claude-3-sonnet-20240229'
+    };
+
+    console.log('Chat API Request:', JSON.stringify(requestBody, null, 2));
+
     const response = await fetch('/api/chat-direct', {
       method: 'POST',
       headers: {
