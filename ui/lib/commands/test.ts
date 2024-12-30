@@ -91,14 +91,14 @@ export const test: CommandHandler = async (args: string, submit, context) => {
           { type: 'text', text: helloWorld.commentary },
           { type: 'code', text: helloWorld.code[0].file_content }
         ],
-        object: helloWorld,
-        result: result
+        object: helloWorld,  // This triggers the button
+        result: result       // This provides the preview data
       }],
       userID: context.userID,
       model: context.model,
       template: context.template,
       config: newContext.config,
-      updateLast: true // Add this to update the last message instead of adding new one
+      updateLast: true
     })
 
     return true
