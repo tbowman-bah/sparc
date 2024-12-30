@@ -7,7 +7,16 @@ export const codingCommand: Command = {
   handler: async (args: string, submit: SubmitFunction, context: CommandContext) => {
     if (!args) return false;
 
-    // Use the default handler to ensure consistent behavior with direct input
-    return context.defaultHandler(args, submit, context);
+    // Ensure skipAI is set to false
+    const newContext = {
+      ...context,
+      config: {
+        ...context.config,
+        skipAI: false,
+      },
+    };
+
+    // Use the default handler with updated context
+    return newContext.defaultHandler(args, submit, newContext);
   }
 }
