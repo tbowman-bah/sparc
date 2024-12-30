@@ -22,7 +22,7 @@ import {
   TwitterLogoIcon,
 } from '@radix-ui/react-icons'
 import { Session } from '@supabase/supabase-js'
-import { ArrowRight, LogOut, Trash, Undo } from 'lucide-react'
+import { ArrowRight, LogOut, Trash, Undo, PanelRightClose, PanelRightOpen } from 'lucide-react'
 import Link from 'next/link'
 
 export function NavBar({
@@ -34,6 +34,8 @@ export function NavBar({
   onSocialClick,
   onUndo,
   canUndo,
+  showFragment,
+  onToggleFragment,
 }: {
   session: Session | null
   showLogin: () => void
@@ -43,6 +45,8 @@ export function NavBar({
   onSocialClick: (target: 'github' | 'x' | 'discord') => void
   onUndo: () => void
   canUndo: boolean
+  showFragment: boolean
+  onToggleFragment: () => void
 }) {
   return (
     <nav className="w-full flex bg-background py-4">
@@ -81,6 +85,21 @@ export function NavBar({
               </Button>
             </TooltipTrigger>
             <TooltipContent>Clear chat</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip delayDuration={0}>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onToggleFragment}
+                className="text-muted-foreground"
+              >
+                {showFragment ? <PanelRightClose className="h-4 w-4 md:h-5 md:w-5" /> : <PanelRightOpen className="h-4 w-4 md:h-5 md:w-5" />}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Toggle fragment view</TooltipContent>
           </Tooltip>
         </TooltipProvider>
         <TooltipProvider>
