@@ -84,20 +84,35 @@ export const chat: CommandHandler = async (args: string, submit, context) => {
       throw new Error(errorData.error || `API request failed with status ${response.status}`);
     }
 
-    const data = await response.json();
-    const content = data.content;
+    if (!response.body) {
+      throw new Error('No response body received');
+    }
 
-    // Submit final response
-    submit({
-      messages: [{
-        role: 'assistant',
-        content: [{ type: 'text', text: content }]
-      }],
-      userID: context.userID,
-      model: context.model,
-      template: context.template,
-      config: context.config
-    });
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let accumulatedContent = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      
+      const chunk = decoder.decode(value);
+      accumulatedContent += chunk;
+
+      // Update the message with accumulated content
+      submit({
+        messages: [{
+          role: 'assistant',
+          content: [{ type: 'text', text: accumulatedContent }],
+          streaming: !done
+        }],
+        userID: context.userID,
+        model: context.model,
+        template: context.template,
+        config: context.config,
+        updateLast: true
+      });
+    }
 
     console.log('=== Chat Command Complete ===')
     return true
