@@ -276,8 +276,14 @@ export default function Home() {
       stop()
     }
 
-    // Check for commands first
-    if (chatInput.startsWith('/')) {
+    let commandInput = chatInput
+    // If no command prefix and chat is selected in dropdown, add /chat prefix
+    if (!chatInput.startsWith('/') && selectedTemplate === 'chat') {
+      commandInput = `/chat ${chatInput}`
+    }
+
+    // Handle commands
+    if (commandInput.startsWith('/')) {
       // Clear input immediately for all commands
       setChatInput('');
       setFiles([]);
@@ -313,7 +319,7 @@ export default function Home() {
       }
 
       const isCommand = await handleCommand(
-        chatInput,
+        commandInput,
         (params) => {
           if (params.messages) {
             const newMessages = params.messages.map(msg => {
@@ -372,6 +378,9 @@ export default function Home() {
         setFiles([]);
         return;
       }
+
+      // Reset command input if we didn't handle it
+      commandInput = chatInput;
     }
 
     // Handle regular chat messages
