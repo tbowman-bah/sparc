@@ -38,8 +38,14 @@ export const chat: CommandHandler = async (args: string, submit, context) => {
   })
 
   try {
-    // Get previous messages from context
-    const previousMessages = context.messages || []
+    // Get previous messages from context, excluding system messages
+    const previousMessages = (context.messages || []).filter(msg => msg.role !== 'system');
+
+    // Create message payload with system message first if present
+    const systemMessage = context.template?.system;
+    const messagePayload = systemMessage 
+      ? [{ role: 'system', content: [{ type: 'text', text: systemMessage }] }, ...previousMessages]
+      : previousMessages;
 
     const response = await fetch('/api/chat-direct', {
       method: 'POST',
@@ -48,7 +54,7 @@ export const chat: CommandHandler = async (args: string, submit, context) => {
       },
       body: JSON.stringify({
         prompt: args,
-        messages: previousMessages.map(msg => ({
+        messages: messagePayload.map(msg => ({
           role: msg.role,
           content: msg.content.map(c => ({
             type: c.type,
