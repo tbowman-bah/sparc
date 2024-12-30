@@ -1,5 +1,5 @@
 import { CommandHandler } from './types'
-import { ExecutionResult } from '@/lib/types'
+import { ExecutionResult } from '../types'
 
 export const test: CommandHandler = async (args: string, submit, context) => {
   // Ensure skipAI is false
@@ -89,13 +89,13 @@ export const test: CommandHandler = async (args: string, submit, context) => {
         role: 'assistant',
         content: [
           { type: 'text', text: helloWorld.commentary },
-          { type: 'code', text: helloWorld.code[0].file_content }
-        ],
-        object: {
-          ...helloWorld,
-          title: "Hello World Example"  // Explicitly set title for fragment button
-        },
-        result: result
+          { type: 'code', text: helloWorld.code[0].file_content },
+          { type: 'fragment', text: JSON.stringify({
+            ...helloWorld,
+            title: "Hello World Example"
+          })},
+          { type: 'result', text: JSON.stringify(result) }
+        ]
       }],
       userID: context.userID,
       model: context.model,

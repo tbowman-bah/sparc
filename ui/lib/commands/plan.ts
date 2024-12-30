@@ -83,7 +83,7 @@ export const plan: CommandHandler = async (args: string, submit, context) => {
       }
     ];
 
-    const stageResults = [];
+    const stageResults: string[] = [];
     
     for (const stage of stages) {
       // Show current stage progress

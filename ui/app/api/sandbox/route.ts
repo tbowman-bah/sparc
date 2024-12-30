@@ -1,5 +1,5 @@
-import { FragmentSchema } from '@/lib/schema'
-import { ExecutionResultInterpreter, ExecutionResultWeb } from '@/lib/types'
+import { FragmentSchema } from '../../../lib/schema'
+import { ExecutionResultInterpreter, ExecutionResultWeb } from '../../../lib/types'
 import { Sandbox } from '@e2b/code-interpreter'
 
 const sandboxTimeout = 10 * 60 * 1000 // 10 minute in ms
@@ -34,15 +34,20 @@ export async function POST(req: Request) {
 
   // Copy code to fs
   if (fragment.code && Array.isArray(fragment.code)) {
-    fragment.code.forEach(async (file) => {
+    for (const file of fragment.code) {
       await sbx.files.write(file.file_path, file.file_content)
       console.log(`Copied file to ${file.file_path} in ${sbx.sandboxId}`)
-    })
+    }
   }
 
   // Execute code or return a URL to the running sandbox
   if (fragment.template === 'code-interpreter-v1') {
-    const { logs, error, results } = await sbx.runCode(fragment.code || '')
+    // For code interpreter, combine all code files into a single string
+    const codeContent = Array.isArray(fragment.code)
+      ? fragment.code.map(file => file.file_content).join('\n\n')
+      : ''
+
+    const { logs, error, results } = await sbx.runCode(codeContent)
 
     return new Response(
       JSON.stringify({

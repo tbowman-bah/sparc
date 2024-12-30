@@ -1,4 +1,11 @@
 {
+  "chat": {
+    "name": "Chat",
+    "lib": [],
+    "file": null,
+    "instructions": "General chat interface for natural conversations.",
+    "port": null
+  },
   "code-interpreter-v1": {
     "name": "Python data analyst",
     "lib": ["python", "jupyter", "numpy", "pandas", "matplotlib", "seaborn", "plotly"],

@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
-export default {
-  serverExternalPackages: ['child_process'],
+const nextConfig = {
   webpack: (config, { isServer }) => {
     if (!isServer) {
       // Don't attempt to import node-specific modules on the client side
@@ -15,3 +14,5 @@ export default {
     return config
   }
 }
+
+export default nextConfig

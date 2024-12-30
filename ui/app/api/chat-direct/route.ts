@@ -1,8 +1,9 @@
 import { StreamingTextResponse, Message } from 'ai'
-import { ReadableStream } from 'stream/web'
+import { NextResponse } from 'next/server'
 import { ChatAnthropic } from '@langchain/anthropic'
 import { HumanMessage, SystemMessage } from '@langchain/core/messages'
-import { chatTemplate } from '@/lib/commands/chat-template'
+import { AIMessage } from '@langchain/core/messages'
+import { MessageContentText } from '@langchain/core/messages'
 
 export async function POST(req: Request) {
   try {
@@ -36,26 +37,43 @@ export async function POST(req: Request) {
     const stream = await model.stream(messages);
     
     // Transform the stream to emit text chunks
+    const textEncoder = new TextEncoder()
     const textStream = new ReadableStream({
       async start(controller) {
         try {
           for await (const chunk of stream) {
-            if (chunk.content) {
-              controller.enqueue(chunk.content);
+            // Handle both string and complex message content
+            let content = ''
+            
+            if (chunk instanceof AIMessage) {
+              if (typeof chunk.content === 'string') {
+                content = chunk.content
+              } else if (Array.isArray(chunk.content)) {
+                content = chunk.content
+                  .filter((c): c is MessageContentText => c.type === 'text')
+                  .map(c => c.text)
+                  .join('')
+              }
+            } else if (typeof chunk.content === 'string') {
+              content = chunk.content
+            }
+
+            if (content) {
+              controller.enqueue(textEncoder.encode(content))
             }
           }
-          controller.close();
+          controller.close()
         } catch (error) {
-          controller.error(error);
+          controller.error(error)
         }
       }
-    });
+    })
 
     return new StreamingTextResponse(textStream, {
       headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-      },
-    });
+        'Content-Type': 'text/plain; charset=utf-8'
+      }
+    })
     
   } catch (error: any) {
     return NextResponse.json(

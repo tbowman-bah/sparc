@@ -127,7 +127,7 @@ export default function Home() {
           defaultHandler: async (args: string, submit: SubmitFunction, context: CommandContext) => {
             const content: Message['content'] = [{ type: 'text', text: args }]
             const newMessages = [...messages, {
-              role: 'user',
+              role: 'user' as const,
               content,
             }]
             setMessages(newMessages)
@@ -213,13 +213,6 @@ export default function Home() {
           setResult(result)
           setCurrentPreview({ fragment, result })
           setMessage({ result })
-          // Handle forced tab switch and preview from test command
-          if (context.config?.forceTabSwitch) {
-            setCurrentTab(context.config.forceTabSwitch)
-          }
-          if (context.config?.setPreview) {
-            setCurrentPreview(context.config.setPreview)
-          }
         } catch (err) {
           console.error('Sandbox error:', err)
         } finally {
@@ -301,10 +294,10 @@ export default function Home() {
 
         // Add user message to chat
         const newMessages = [...messages, {
-          role: 'user',
+          role: 'user' as const,
           content,
         }]
-        setMessages(newMessages)
+        setMessages(newMessages as Message[])
 
         // Submit for AI processing
         submit({
@@ -394,7 +387,7 @@ export default function Home() {
     }
 
     const updatedMessages = addMessage({
-      role: 'user',
+      role: 'user' as const,
       content,
     })
 
