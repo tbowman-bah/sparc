@@ -4,7 +4,6 @@ import { chat } from './commands/chat'
 import { plan } from './commands/plan'
 import { help } from './commands/help'
 import { spec as sparc } from './commands/spec'
-import { codingCommand } from './commands/coding'
 
 export const commands: CommandRegistry = {
   research: {
@@ -31,9 +30,7 @@ export const commands: CommandRegistry = {
     name: 'SPARC',
     description: 'Enter specification mode',
     handler: sparc
-  },
-  coding: codingCommand,
-  code: codingCommand // Add alias for /code command
+  }
 }
 
 export async function handleCommand(input: string, submit: SubmitFunction, context: CommandContext): Promise<boolean> {
