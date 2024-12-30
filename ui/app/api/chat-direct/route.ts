@@ -28,13 +28,11 @@ export async function POST(req: Request) {
         : new SystemMessage(messageText)
     }) || []
 
-    // Check if there's already a system message in the history
-    const hasSystemMessage = messageHistory.some(msg => msg instanceof SystemMessage);
+    // Filter out any existing system messages from history
+    const filteredHistory = messageHistory.filter(msg => !(msg instanceof SystemMessage));
     
-    // Only add system message if none exists
-    const messages = hasSystemMessage
-      ? [...messageHistory, new HumanMessage(prompt)]
-      : [new SystemMessage(chatTemplate.system), ...messageHistory, new HumanMessage(prompt)]
+    // Always add system message as first message
+    const messages = [new SystemMessage(chatTemplate.system), ...filteredHistory, new HumanMessage(prompt)]
 
     try {
       const response = await model.invoke(messages)
