@@ -39,6 +39,11 @@ Examples:
         '''
     )
     parser.add_argument(
+        '--non-interactive',
+        action='store_true',
+        help='Run in non-interactive mode (for server deployments)'
+    )
+    parser.add_argument(
         '-m', '--message',
         type=str,
         help='The task or query to be executed by the agent'
@@ -130,6 +135,12 @@ def main():
     """Main entry point for the sparc command line tool."""
     try:
         args = parse_arguments()
+
+        # Handle non-interactive mode
+        if args.non_interactive:
+            from sparc_cli.non_interactive import handle_non_interactive
+            handle_non_interactive()
+            return
         expert_enabled, expert_missing = validate_environment(args)  # Will exit if main env vars missing
         
         if expert_missing:
