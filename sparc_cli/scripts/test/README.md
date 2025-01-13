@@ -137,6 +137,16 @@ Sets up DevOps automation and infrastructure.
   - Container Orchestration
   - DevOps workflow automation
 
+### LionAGI Test (`lionagi_test.sh`)
+Tests LionAGI framework integration and capabilities.
+- **Features:**
+  - Chain Building and Management
+  - Agent System Implementation
+  - Memory Management
+  - Tool Integration
+  - Workflow Automation
+  - UV package management
+
 ## Autonomous Operation
 
 Each script demonstrates a different aspect of autonomous development:
@@ -214,7 +224,8 @@ test/
 ├── scraper_test.sh
 ├── docs_test.sh
 ├── qa_test.sh
-└── devops_test.sh
+├── devops_test.sh
+└── lionagi_test.sh
 ```
 
 ## Contributing
