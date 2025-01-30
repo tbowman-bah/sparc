@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9-slim
+FROM python:3.12-slim
 
 # Set the working directory in the container
 WORKDIR /app
@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir flask
 EXPOSE 5000
 
 # Define environment variable
-ENV NAME SparcMCPServer
+ENV NAME=SparcMCPServer
 
 # Run app.py when the container launches
 CMD ["python", "app.py"]
