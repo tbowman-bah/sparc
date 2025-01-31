@@ -5,14 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.87.7] - 2024-03-19
+## [1.0.0] - 2025-01-31
 
+### Major Changes
+- Adopted formal semantic versioning for better version management
+- Stabilized API for production use
+- Consolidated all recent changes into first major release
+
+### Added
 - Add automatic playwright installation during package setup
-- Do not put file ID in file paths when reading for expert context.
-- Agents log work internally, improving context information.
-- Clear task list when plan is completed.
-
-## [Unreleased]
+- Do not put file ID in file paths when reading for expert context
+- Agents log work internally, improving context information
+- Clear task list when plan is completed
+- Optimize first prompt in chat mode
+- Improved prompts
+- Chat mode implementation
+- Allow agents to be interrupted
 
 ## [0.8.2] - 2024-12-23
 
