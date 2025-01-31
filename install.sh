@@ -51,7 +51,7 @@ venv() {
 
 deps() {
 
-    pip install --requirement requirements-dev.txt
+    pip install --requirement requirements.txt
     pip install --editable .
 
     if command -v rg &>/dev/null
