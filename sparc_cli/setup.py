@@ -30,12 +30,12 @@ setup(
         'sympy',  # Required for symbolic math
         'langchain',
     ],
-    author='rUv',
-    author_email='ruv@ruv.net',
+    author='tbowman-bah',
+    author_email='bowman_trevor@bah.com',     # author_email='ruv@ruv.net',
     description='SPARC CLI is a powerful command-line interface that implements the SPARC Framework methodology for AI-assisted software development. Combining autonomous research capabilities with guided implementation, it provides a comprehensive toolkit for analyzing codebases, planning changes, and executing development tasks with advanced AI assistance.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/ruvnet/sparc',
+    url='https://github.com/tbowman-bah/sparc',     # url='https://github.com/ruvnet/sparc',
     license='Apache License 2.0',
     classifiers=[
         'Development Status :: 3 - Alpha',
